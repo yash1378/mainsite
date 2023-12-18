@@ -8,7 +8,7 @@ import { styled } from '@mui/system';
 const StyledButton = styled(Button)({
 
     backgroundColor: '#2196F3', // Set your desired background color
-    color: '#1565C0', // Set your desired text color
+    color: 'white', // Set your desired text color
     fontSize: '20px', // Set your desired font size
     width: '100%', // Set the width to 100% to match the fields
     marginTop:'16px',
