@@ -14,6 +14,7 @@ import {
 import { styled } from "@mui/system";
 import Router from "next/router";
 import { Alert, AlertTitle } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material/Select";
 
 const StyledButton = styled(Button)({
   backgroundColor: "#2196F3", // Set your desired background color
@@ -33,25 +34,20 @@ const StyledMenu = styled(MenuItem)({
 
 const MoreDetails: React.FC = () => {
   const [name, setName] = useState("");
-  const [dropdown1Value, setDropdown1Value] = useState("");
-  const [dropdown2Value, setDropdown2Value] = useState("");
+  const [dropdown1Value, setDropdown1Value] = useState<string>(''); // Assuming the dropdown values are strings
+  const [dropdown2Value, setDropdown2Value] = useState<string>('');
     const [isError, SetisError] = useState(false)
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-  const handleDropdown1Change = (e: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = e.target.value as string;
-    setDropdown1Value(selectedValue);
-    // If you want to update the name field based on dropdown1 selection, uncomment the line below
-    // setName(selectedValue);
+
+  const handleDropdown1Change = (event: SelectChangeEvent<string>) => {
+    setDropdown1Value(event.target.value);
   };
 
-  const handleDropdown2Change = (e: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedValue = e.target.value as string;
-    setDropdown2Value(selectedValue);
-    // If you want to update the name field based on dropdown2 selection, uncomment the line below
-    // setName(selectedValue);
+  const handleDropdown2Change = (event: SelectChangeEvent<string>) => {
+    setDropdown2Value(event.target.value);
   };
 
   const handleSubmit = () => {

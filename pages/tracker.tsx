@@ -1,9 +1,10 @@
 // pages/test-tracker.tsx
 
 import React, { useState } from 'react';
-import { Typography, Container, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
+import { Typography, Container, FormControl, InputLabel, Select, MenuItem, TextField, Button, SelectChangeEvent } from '@mui/material';
 import { styled } from '@mui/system';
-import { set } from 'date-fns';
+
+
 const StyledButton = styled(Button)({
 
     backgroundColor: '#2196F3', // Set your desired background color
@@ -17,14 +18,14 @@ const StyledButton = styled(Button)({
     },
   });
   
+
 const TestTracker: React.FC = () => {
-  const [testType, setTestType] = useState('');
+  const [testType, setTestType] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const handleTestTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setTestType(event.target.value as string);
-  };
-
+  const handleTestTypeChange = (event: SelectChangeEvent<string>) => {
+    setTestType(event.target.value);
+  }
   const handleDateChange = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
