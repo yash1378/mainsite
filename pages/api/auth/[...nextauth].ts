@@ -10,7 +10,7 @@ export default NextAuth({
     // Add more providers as needed
   ],
   callbacks: {
-    async signIn(user, account, profile) {
+    async signIn({ user, account, profile, email, credentials }) {
       // Redirect to another page after successful sign-in
       return Promise.resolve('/intro'); // Specify the path to your desired redirect page
     },
