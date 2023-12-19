@@ -1,42 +1,43 @@
 // pages/test-tracker.tsx
-
 import React, { useState } from 'react';
 import { Typography, Container, FormControl, InputLabel, Select, MenuItem, TextField, Button, SelectChangeEvent } from '@mui/material';
 import { styled } from '@mui/system';
 
-
 const StyledButton = styled(Button)({
-
-    backgroundColor: '#2196F3', // Set your desired background color
-    color: 'white', // Set your desired text color
-    fontSize: '20px', // Set your desired font size
-    width: '100%', // Set the width to 100% to match the fields
-    marginTop:'16px',
-    '&:hover': {
-      backgroundColor: '#1565C0', // Set a different color on hover if needed
-      color:'white'
-    },
-  });
-  
-
+  backgroundColor: '#2196F3', // Set your desired background color
+  color: 'white', // Set your desired text color
+  fontSize: '20px', // Set your desired font size
+  width: '100%', // Set the width to 100% to match the fields
+  marginTop: '16px',
+  '&:hover': {
+    backgroundColor: '#1565C0', // Set a different color on hover if needed
+    color: 'white'
+  },
+});
+import { useRouter } from 'next/router';
 const TestTracker: React.FC = () => {
   const [testType, setTestType] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleTestTypeChange = (event: SelectChangeEvent<string>) => {
     setTestType(event.target.value);
-  }
+  };
+
   const handleDateChange = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
     }
   };
+  const Router = useRouter();
 
   const handleSubmit = () => {
     setTestType('');
     setSelectedDate(new Date());
     console.log('Test Type:', testType);
     console.log('Selected Date:', selectedDate);
+    if(testType === 'mains'){
+      Router.push('/math')
+    }
     // Add any additional submission logic here
   };
 
@@ -62,7 +63,7 @@ const TestTracker: React.FC = () => {
             value={testType}
             onChange={handleTestTypeChange}
           >
-            <MenuItem value="mains">Class Mains</MenuItem>
+            <MenuItem value="mains">Classic Mains</MenuItem>
             <MenuItem value="advanced">Classic Advanced</MenuItem>
             <MenuItem value="custom">Custom Test</MenuItem>
           </Select>
