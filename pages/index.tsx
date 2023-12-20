@@ -39,7 +39,7 @@ export default function HomePage() {
   };
 
   const sendUserDataToBackend = (userData:UserData) => {
-    fetch('http://localhost:3001/api', {
+    fetch('https://jsmainsite.onrender.com/api', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

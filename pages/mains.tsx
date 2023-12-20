@@ -211,7 +211,7 @@ const MathsPage: React.FC = () => {
   const [theory, setTheory] = useState(0);
 
   const handleSubmit = async () => {
-    const response = await fetch("http://localhost:3001/mainsdata", {
+    const response = await fetch("https://jsmainsite.onrender.com/mainsdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
