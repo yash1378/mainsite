@@ -1,3 +1,4 @@
+import { truncate } from "fs";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
@@ -10,10 +11,30 @@ export default NextAuth({
     // Add more providers as needed
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      // Redirect to another page after successful sign-in
-      return Promise.resolve('/intro'); // Specify the path to your desired redirect page
+    async session({ session, user }) {
+      if (user) {
+        return Promise.resolve({
+          ...session,
+          user: {
+            ...session.user,
+            id: user.id,
+          },
+        });
+      }
+      return session;
     },
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log('User:', user);
+
+      if (user && user.id) {
+        // const userString = JSON.stringify(user);
+        return true;// Specify the path to your desired redirect page
+      }
+
+      // Handle the case where the user or user.id is undefined
+      return false;
+    },
+
   },
   // ...other configuration options
 });

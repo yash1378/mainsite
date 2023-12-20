@@ -36,7 +36,7 @@ const TestTracker: React.FC = () => {
     console.log('Test Type:', testType);
     console.log('Selected Date:', selectedDate);
     if(testType === 'mains'){
-      Router.push('/math')
+      Router.push('/mains')
     }
     // Add any additional submission logic here
   };
