@@ -203,7 +203,6 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 
 const MathsPage: React.FC = () => {
   const router = useRouter();
-  const { data: session } = useSession();
   const [correct, setCorrect] = useState(0);
   const [silly, setSilly] = useState(0);
   const [slight, setSlight] = useState(0);
@@ -211,21 +210,21 @@ const MathsPage: React.FC = () => {
   const [theory, setTheory] = useState(0);
 
   const handleSubmit = async () => {
+    const data = localStorage.getItem("jwt");
     const response = await fetch("https://jsmainsite.onrender.com/mainsdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${data}`, // Include the JWT in the Authorization header
       },
       body: JSON.stringify({
-        email: session?.user?.email,
-        correct: (correct*4),
-        silly: (silly*4),
-        slight: (slight*4),
-        tough: (tough*4),
-        theory: (theory*4),
+        correct: correct * 4,
+        silly: silly * 4,
+        slight: slight * 4,
+        tough: tough * 4,
+        theory: theory * 4,
       }),
     });
-
     if (response.ok) {
       setCorrect(0);
       setSilly(0);
@@ -233,10 +232,11 @@ const MathsPage: React.FC = () => {
       setTough(0);
       setTheory(0);
 
+
+
       router.push({
         pathname: "/analysis",
         query: {
-          email: session?.user?.email,
           correct: correct,
           silly: silly,
           slight: slight,

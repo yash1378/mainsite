@@ -1,109 +1,127 @@
-// AnalysisPage.tsx
-import React from 'react';
-import { useRouter } from 'next/router';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import SignOutButton from "@/components/signout";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Box,
+} from "@mui/material";
 
-const AnalysisPage: React.FC = () => {
+const UserDataPage = () => {
+  const { data: session } = useSession();
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
-  const { buttonColors, integralButtonColors } = router.query;
 
-  // Parse the received data
-  const parsedButtonColors = buttonColors ? JSON.parse(buttonColors as string) : [];
-  const parsedIntegralButtonColors = integralButtonColors ? JSON.parse(integralButtonColors as string) : [];
+  interface UserData {
+    date: string;
+    type: string;
+    totalMarks: number;
+    marksScored: number;
+    sillyError: number;
+    revision: number;
+    toughness: number;
+    theory: number;
+  }
 
-  console.log('Parsed Button Colors:', parsedButtonColors);
-  console.log('Parsed Integral Button Colors:', parsedIntegralButtonColors);
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("jwt");
 
-  // Combine data from both tables
-  const combinedData = [...parsedButtonColors, ...parsedIntegralButtonColors];
+    if (!jwtToken) {
+      console.error("JWT token not available");
+      return;
+    }
 
-  // Function to count the number of clicked answers for a specific column
-  const countClickedAnswers = (data: any[], columnIndex: number) => {
-    return data.reduce((acc, row) => acc + (row && row[columnIndex] !== '' ? 1 : 0), 0);
-  };
-
-  // Calculate the number of clicked answers for each column
-  const clickedCorrectAnswers = countClickedAnswers(combinedData, 0); // First column
-  const clickedSillyErrors = countClickedAnswers(combinedData, 1); // Second column
-  const clickedSlightRevisions = countClickedAnswers(combinedData, 2); // Third column
-  const clickedToughness = countClickedAnswers(combinedData, 3); // Fourth column
-  const clickedTheory = countClickedAnswers(combinedData, 4); // Fifth column
-
-  // Calculate final cumulative row
-  const finalCumulativeRow = {
-    date: new Date().toLocaleDateString(),
-    type: 'Mains',
-    totalMarks: 100,
-    mathsScore: clickedCorrectAnswers * 4,
-    sillyError: clickedSillyErrors * 4,
-    slightRevision: clickedSlightRevisions * 4,
-    toughness: clickedToughness * 4,
-    theory: clickedTheory * 4,
-  };
+    fetch(`https://jsmainsite.onrender.com/mainsdata`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+        return response.json();
+      })
+      .then((userData) => {
+        setUserData(userData);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error.message);
+      });
+  }, [session]);
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
 
   return (
-    <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ width: '45%', margin: '0 10px' }}>
-        <Typography variant="h2">Math Score</Typography>
+    <div style={{ textAlign: "center", marginTop: "20px" }}>
+      <Typography variant="h3">User Data</Typography>
 
-        <TableContainer component={Paper} style={{ width: '100%', marginTop: '30px' }}>
+      <Box display="flex" justifyContent="space-between">
+        <TableContainer
+          component={Paper}
+          style={{ width: "48%", marginRight: "2%" }}
+        >
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Date</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Type</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Total Marks</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Maths Score</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Total Marks</TableCell>
+                <TableCell>Maths Score</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* Cumulative Row */}
-              <TableRow key={finalCumulativeRow.date}>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{finalCumulativeRow.date}</TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{finalCumulativeRow.type}</TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{finalCumulativeRow.totalMarks}</TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{finalCumulativeRow.mathsScore}</TableCell>
-              </TableRow>
+              {Array.isArray(userData) &&
+                (userData as UserData[]).map((user: UserData, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell>{new Date(user.date).toLocaleDateString('en-GB')}</TableCell>
+                    <TableCell>{user.type}</TableCell>
+                    <TableCell>{user.totalMarks}</TableCell>
+                    <TableCell>{user.marksScored}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
 
-      <div style={{ width: '45%', margin: '0 10px' }}>
-        <Typography variant="h2">Other Scores</Typography>
-
-        <TableContainer component={Paper} style={{ width: '100%', marginTop: '30px' }}>
+        <TableContainer
+          component={Paper}
+          style={{ width: "48%", marginLeft: "2%" }}
+        >
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Silly Error</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Slight Revision</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Toughness</TableCell>
-                <TableCell style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Theory</TableCell>
+                <TableCell>Silly Error</TableCell>
+                <TableCell>Slight Revision</TableCell>
+                <TableCell>Toughness</TableCell>
+                <TableCell>Theory</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* Cumulative Row */}
-              <TableRow key={`${finalCumulativeRow.date}-other`}>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', background: 'rgba(255, 0, 0, 0.4)' }}>
-                  {finalCumulativeRow.sillyError}
-                </TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', background: 'rgba(138, 43, 226, 0.4)' }}>
-                  {finalCumulativeRow.slightRevision}
-                </TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', background: 'rgba(0, 0, 255, 0.4)' }}>
-                  {finalCumulativeRow.toughness}
-                </TableCell>
-                <TableCell style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'white', background: 'rgba(0, 0, 255, 0.4)' }}>
-                  {finalCumulativeRow.theory}
-                </TableCell>
-              </TableRow>
+              {Array.isArray(userData) &&
+                (userData as UserData[]).map((user: UserData, index: number) => (
+                  <TableRow key={index}>
+                    <TableCell>{user.sillyError}</TableCell>
+                    <TableCell>{user.revision}</TableCell>
+                    <TableCell>{user.toughness}</TableCell>
+                    <TableCell>{user.theory}</TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </div>
+      </Box>
+      <SignOutButton />
     </div>
   );
 };
 
-export default AnalysisPage;
+export default UserDataPage;

@@ -23,6 +23,8 @@ const TestTracker: React.FC = () => {
     setTestType(event.target.value);
   };
 
+  // const router = useRouter();
+
   const handleDateChange = (date: Date | null) => {
     if (date) {
       setSelectedDate(date);
@@ -36,7 +38,9 @@ const TestTracker: React.FC = () => {
     console.log('Test Type:', testType);
     console.log('Selected Date:', selectedDate);
     if(testType === 'mains'){
-      Router.push('/mains')
+      Router.push({
+        pathname: '/mains',
+      });
     }
     // Add any additional submission logic here
   };

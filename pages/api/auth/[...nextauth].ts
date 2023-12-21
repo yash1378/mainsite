@@ -2,6 +2,7 @@ import { truncate } from "fs";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -10,8 +11,9 @@ export default NextAuth({
     }),
     // Add more providers as needed
   ],
+  secret: "yash",
   callbacks: {
-    async session({ session, user }) {
+    async session({ session, user}) {
       if (user) {
         return Promise.resolve({
           ...session,

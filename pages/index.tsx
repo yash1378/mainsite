@@ -1,83 +1,73 @@
-// pages/index.tsx
-
-import { Button, Typography } from '@mui/material';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { send } from 'process';
-import { useEffect } from 'react';
-
-
-interface UserData {
-  name: string;
-  email:string;
-  // Add other properties if necessary
-}
-
-
-export default function HomePage() {
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import { useState } from 'react';
+const SignIn = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const [data, setData] = useState("");
 
-  const handleSignInWithGoogle = async () => {
-    const result = await signIn('google');
-
-
+  const handleSignIn = async () => {
+    // Use Google Sign-In API here
+    // Redirect to backend for authentication
+    window.location.href = 'https://jsmainsite.onrender.com/api/auth/google';
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    // Redirect to the home page or another page after sign-out
-    router.push('/');
+  const handleSignOut = () => {
+    // Clear the JWT from sessionStorage on sign-out
+    // sessionStorage.removeItem('jwt');
+    localStorage.removeItem('jwt');
+    setData("");
+
+    // For illustration purposes, simply reload the page
+    // window.location.reload();
   };
 
-  const handleRedirect = () => {
-    // Replace with the desired path for redirection
-    if(session){
-      sendUserDataToBackend(session.user as UserData);
-    }
+  const handleGetEnrolled = () => {
+
     router.push('/getenroll');
   };
 
-  const sendUserDataToBackend = (userData:UserData) => {
-    fetch('https://jsmainsite.onrender.com/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then(() => {
-        console.log('User data sent to backend successfully');
-      })
-      .catch((error) => {
-        console.error('Error sending user data to backend:', error);
-      });
-  };
+  useEffect(() => {
+    // Check for JWT in URL query params after redirect from backend
+    const jwt = Array.isArray(router.query.jwt) ? router.query.jwt[0] : router.query.jwt;
 
-  // useEffect to send user data when session becomes true
-
+    if (jwt) {
+      // Store JWT in sessionStorage
+    // Writing to local storage
+      localStorage.setItem('jwt', jwt);
+      // sessionStorage.setItem('jwt', jwt);
+      console.log('Received JWT:', jwt);
+      setData(jwt);
+    }
+  }, [router.query]);
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
-      {session ? (
+      <Typography variant="h4" gutterBottom>
+        Welcome to Your App
+      </Typography>
+      {data!=="" ? (
         <>
-          <Typography variant="h5" gutterBottom>
-            Welcome, {session.user?.name || 'User'}!
-          </Typography>
+          {/* If 'jwt' is present in sessionStorage, show the "Sign Out" button */}
           <Button variant="contained" color="secondary" onClick={handleSignOut}>
             Sign Out
           </Button>
           <br />
           <br />
-          <Button variant="contained" color="primary" onClick={handleRedirect}>
-            Get Enrolled 
+          <Button variant="contained" color="secondary" onClick={handleGetEnrolled}>
+            Get Enrolled
           </Button>
         </>
       ) : (
-        <Button variant="contained" color="primary" onClick={handleSignInWithGoogle}>
-          Sign In with Google
-        </Button>
+        // Otherwise, show the "Sign In with Google" and "Get Enrolled" buttons
+          <Button variant="contained" color="primary" onClick={handleSignIn}>
+            Sign In with Google
+          </Button>
+
       )}
     </div>
   );
-}
+};
+
+export default SignIn;

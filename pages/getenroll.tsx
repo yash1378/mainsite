@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import Router from "next/router";
+import { useRouter } from "next/router";
 import { Alert, AlertTitle } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material/Select";
 
@@ -34,6 +35,8 @@ const StyledButton = styled(Button)({
 const StyledMenu = styled(MenuItem)({
   color: "green",
 });
+
+// const router= useRouter();
 
 
 
@@ -63,7 +66,9 @@ function MyOtherPage() {
   const handleSubmit = () => {
     // Perform any submission logic here
     if (name !== "" && dropdown1Value !== "" && dropdown2Value !== "") {
-      Router.push("/tracker");
+      Router.push({
+        pathname: '/tracker',
+      });
     } else {
         SetisError(true)
     }
