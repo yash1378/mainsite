@@ -10,7 +10,7 @@ const SignIn = () => {
   const handleSignIn = async () => {
     // Use Google Sign-In API here
     // Redirect to backend for authentication
-    window.location.href = 'https://jsmainsite.onrender.com/api/auth/google';
+    window.location.href = 'https://jsmainsitebackend.onrender.com/api/auth/google';
   };
 
   const handleSignOut = () => {

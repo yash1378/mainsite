@@ -211,7 +211,7 @@ const MathsPage: React.FC = () => {
 
   const handleSubmit = async () => {
     const data = localStorage.getItem("jwt");
-    const response = await fetch("https://jsmainsite.onrender.com/mainsdata", {
+    const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

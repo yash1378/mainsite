@@ -38,7 +38,7 @@ const UserDataPage = () => {
       return;
     }
 
-    fetch(`https://jsmainsite.onrender.com/mainsdata`, {
+    fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

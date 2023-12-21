@@ -20,7 +20,7 @@ const ProtectedPage = () => {
     }
 
     // Example fetch request with headers
-    fetch('https://jsmainsite.onrender.com/api/protected-data', {
+    fetch('https://jsmainsitebackend.onrender.com/api/protected-data', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
