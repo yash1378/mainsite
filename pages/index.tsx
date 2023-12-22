@@ -18,6 +18,7 @@ const SignIn = () => {
     // sessionStorage.removeItem('jwt');
     localStorage.removeItem('jwt');
     setData("");
+    router.push("/");
 
     // For illustration purposes, simply reload the page
     // window.location.reload();
