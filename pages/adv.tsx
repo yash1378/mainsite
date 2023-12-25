@@ -175,9 +175,9 @@ const NextPage: React.FC = () => {
   }
 `;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Send the values to the backend API (replace with your actual API endpoint)
-    fetch("https://jsmainsitebackend.onrender.com/advdata", {
+    const response  = await fetch("https://jsmainsitebackend.onrender.com/advdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -191,16 +191,15 @@ const NextPage: React.FC = () => {
         theory: theory,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-        router.push("/");
-        // Optionally, you can redirect or show a success message here
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        // Handle the error (redirect, show an error message, etc.)
+
+    if (response.ok) {
+      router.push({
+        pathname: "/",
       });
+    } else {
+      console.log("Error");
+    }
+
   };
 
   const handleInputChange = (
