@@ -42,6 +42,11 @@ const TestTracker: React.FC = () => {
         pathname: '/mains',
       });
     }
+    if(testType === 'advanced'){
+      Router.push({
+        pathname: '/advformat',
+      });
+    }
     // Add any additional submission logic here
   };
 

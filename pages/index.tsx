@@ -11,6 +11,7 @@ const SignIn = () => {
     // Use Google Sign-In API here
     // Redirect to backend for authentication
     window.location.href = 'https://jsmainsitebackend.onrender.com/api/auth/google';
+    // window.location.href = 'http://localhost:3001/api/auth/google';
   };
 
   const handleSignOut = () => {
