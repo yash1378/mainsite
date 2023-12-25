@@ -44,7 +44,6 @@ const subjects = ["Math", "Physics", "Chemistry"];
 const NextPage: React.FC = () => {
   const router = useRouter();
   const { cardData } = router.query;
-  const [jwt, setJwt] = useState<string>(localStorage.getItem("jwt") || "");
 
   if (!cardData) {
     // Redirect to the previous page if data is not available
@@ -168,12 +167,13 @@ const NextPage: React.FC = () => {
 `;
 
   const handleSubmit = () => {
+    const d = localStorage.getItem("jwt");
     // Send the values to the backend API (replace with your actual API endpoint)
     fetch("https://jsmainsitebackend.onrender.com/advdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${jwt}`, // Include the JWT in the Authorization header
+        Authorization: `Bearer ${d}`, // Include the JWT in the Authorization header
       },
       body: JSON.stringify({
         correct: correct,
