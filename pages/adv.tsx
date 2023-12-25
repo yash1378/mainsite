@@ -56,7 +56,9 @@ const NextPage: React.FC = () => {
 
   if (!cardData) {
     // Redirect to the previous page if data is not available
-    router.push("/");
+    useEffect(() => {
+      router.push("/");
+    }, []); // Redirect on mount
     return null;
   }
 
