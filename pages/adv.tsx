@@ -16,7 +16,7 @@ import {
 import { useRouter } from "next/router";
 import { sub } from "date-fns";
 import { TextField } from "@mui/material";
-
+import { useEffect } from "react";
 interface CardData {
   noOfQuestions: number;
   positiveMarks: number;
@@ -44,6 +44,15 @@ const subjects = ["Math", "Physics", "Chemistry"];
 const NextPage: React.FC = () => {
   const router = useRouter();
   const { cardData } = router.query;
+  const [jwt, setJwt] = useState<string>("");
+  // Use useEffect to run code after component has mounted
+  useEffect(() => {
+    // Get JWT from local storage
+    const storedJwt = localStorage.getItem("jwt");
+    if (storedJwt) {
+      setJwt(storedJwt);
+    }
+  }, []); // The empty dependency array ensures this effect runs only once after mount
 
   if (!cardData) {
     // Redirect to the previous page if data is not available
@@ -167,13 +176,12 @@ const NextPage: React.FC = () => {
 `;
 
   const handleSubmit = () => {
-    const d = localStorage.getItem("jwt");
     // Send the values to the backend API (replace with your actual API endpoint)
     fetch("https://jsmainsitebackend.onrender.com/advdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${d}`, // Include the JWT in the Authorization header
+        Authorization: `Bearer ${jwt}`, // Include the JWT in the Authorization header
       },
       body: JSON.stringify({
         correct: correct,
