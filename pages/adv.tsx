@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { sub } from "date-fns";
@@ -76,7 +77,7 @@ const NextPage: React.FC = () => {
     )
   );
   console.log(selectedButtons);
-
+  const [loading, setLoading] = useState(false); // Add loading state
   const [correct, setCorrect] = useState<number>(0);
   const [silly, setSilly] = useState<number>(0);
   const [slight, setSlight] = useState<number>(0);
@@ -180,6 +181,7 @@ const NextPage: React.FC = () => {
   const handleSubmit = async () => {
     // Send the values to the backend API (replace with your actual API endpoint)
     const response  = await fetch("https://jsmainsitebackend.onrender.com/advdata", {
+      // const response  = await fetch("http://localhost:3001/advdata", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -255,6 +257,10 @@ const NextPage: React.FC = () => {
   return (
     <>
       <style>{styles}</style>
+      {loading ? (
+        <CircularProgress style={{ marginTop: "20px" }} />
+      ):(
+      <>
       <Container maxWidth="lg">
         {subjects.map((subject, subjectIndex) => (
           <div key={subjectIndex}>
@@ -479,6 +485,8 @@ const NextPage: React.FC = () => {
           Submit
         </Button>
       </Container>
+      </>
+      )}
     </>
   );
 };
