@@ -6,6 +6,7 @@ import { useState } from 'react';
 const SignIn = () => {
   const router = useRouter();
   const [data, setData] = useState("");
+  const [user, setUser] = useState(false);
 
   const handleSignIn = async () => {
     // Use Google Sign-In API here
@@ -26,13 +27,24 @@ const SignIn = () => {
   };
 
   const handleGetEnrolled = () => {
-
-    router.push('/getenroll');
+    console.log(user);
+    if(user){
+      router.push('/getenroll');
+    }
+    else{
+      router.push('/tracker');
+    }
   };
 
   useEffect(() => {
     // Check for JWT in URL query params after redirect from backend
     const jwt = Array.isArray(router.query.jwt) ? router.query.jwt[0] : router.query.jwt;
+    const param = Array.isArray(router.query.new) ? router.query.new[0] : router.query.new;
+    console.log(param);
+  
+    if(param === 'true'){
+      setUser(true);
+    }
 
     if (jwt) {
       // Store JWT in sessionStorage

@@ -63,22 +63,36 @@ function MyOtherPage() {
 
 
 
-  const handleSubmit = () => {
+  const handleSubmit = async () =>{
     // Perform any submission logic here
-    if (name !== "" && dropdown1Value !== "" && dropdown2Value !== "") {
-      Router.push({
-        pathname: '/tracker',
-      });
-    } else {
-        SetisError(true)
+    const token = localStorage.getItem('jwt');
+    // const response = await fetch('http://localhost:3001/api/submit', {
+    const response = await fetch('https://jsmainsitebackend.onrender.com/api/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, dropdown1Value, dropdown2Value }),
+    });
+    if(response.ok){
+      console.log("Submitted")
+      if (name !== "" && dropdown1Value !== "" && dropdown2Value !== "") {
+        Router.push({
+          pathname: '/tracker',
+        });
+      } else {
+          SetisError(true)
+      }
+      setName("");
+      setDropdown1Value("");
+      setDropdown2Value("");
+  
+      console.log("Name:", name);
+      console.log("Dropdown 1:", dropdown1Value);
+      console.log("Dropdown 2:", dropdown2Value);
     }
-    setName("");
-    setDropdown1Value("");
-    setDropdown2Value("");
 
-    console.log("Name:", name);
-    console.log("Dropdown 1:", dropdown1Value);
-    console.log("Dropdown 2:", dropdown2Value);
   };
 
 
