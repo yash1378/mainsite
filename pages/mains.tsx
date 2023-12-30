@@ -85,33 +85,59 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
     const newColors = [...buttonColors];
-    
+  
+    // Iterate over the whole row and adjust variables based on the previous selection
+    newColors[rowIndex].forEach((value, index) => {
+      if (value === "clicked") {
+        switch (index) {
+          case 0:
+            setCorrect((prev) => prev - 4);
+            break;
+          case 1:
+            setSilly((prev) => prev - 1);
+            break;
+          case 2:
+            setSlight((prev) => prev - 1);
+            break;
+          case 3:
+            setTough((prev) => prev - 1);
+            break;
+          case 4:
+            setTheory((prev) => prev - 1);
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  
     // Unselect other buttons in the same row
     newColors[rowIndex] = newColors[rowIndex].map((_, index) => (index === columnId ? "clicked" : ""));
-
+  
     setButtonColors(newColors);
-    console.log(newColors);
-
+  
+    // Update the selected button
     switch (columnId) {
       case 0:
-        setCorrect((prev) => (newColors[rowIndex][columnId] === "clicked" ? prev + 1 : prev - 1));
+        setCorrect((prev) => prev + 4);
         break;
       case 1:
-        setSilly((prev) => (newColors[rowIndex][columnId] === "clicked" ? prev + 1 : prev - 1));
+        setSilly((prev) => prev + 1);
         break;
       case 2:
-        setSlight((prev) => (newColors[rowIndex][columnId] === "clicked" ? prev + 1 : prev - 1));
+        setSlight((prev) => prev + 1);
         break;
       case 3:
-        setTough((prev) => (newColors[rowIndex][columnId] === "clicked" ? prev + 1 : prev - 1));
+        setTough((prev) => prev + 1);
         break;
       case 4:
-        setTheory((prev) => (newColors[rowIndex][columnId] === "clicked" ? prev + 1 : prev - 1));
+        setTheory((prev) => prev + 1);
         break;
       default:
         break;
     }
   };
+  
 
   return (
     <>
@@ -242,21 +268,21 @@ const MathsPage: React.FC = () => {
         },
         body: JSON.stringify({
           date: date,
-          correctm: correctm * 4,
-          sillym: sillym * 4,
-          slightm: slightm * 4,
-          toughm: toughm * 4,
-          theorym: theorym * 4,
-          correctp: correctp * 4,
-          sillyp: sillyp * 4,
-          slightp: slightp * 4,
-          toughp: toughp * 4,
-          theoryp: theoryp * 4,
-          correctc: correctc * 4,
-          sillyc: sillyc * 4,
-          slightc: slightc * 4,
-          toughc: toughc * 4,
-          theoryc: theoryc * 4,
+          correctm: correctm ,
+          sillym: sillym,
+          slightm: slightm,
+          toughm: toughm,
+          theorym: theorym,
+          correctp: correctp,
+          sillyp: sillyp ,
+          slightp: slightp ,
+          toughp: toughp ,
+          theoryp: theoryp ,
+          correctc: correctc,
+          sillyc: sillyc ,
+          slightc: slightc ,
+          toughc: toughc ,
+          theoryc: theoryc ,
 
         }),
       });
