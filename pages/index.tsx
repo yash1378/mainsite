@@ -36,6 +36,11 @@ const SignIn = () => {
     }
   };
 
+
+  const handleGetMarks = () => {
+    router.push('/analysis');
+  };
+
   useEffect(() => {
     // Check for JWT in URL query params after redirect from backend
     const jwt = Array.isArray(router.query.jwt) ? router.query.jwt[0] : router.query.jwt;
@@ -71,6 +76,11 @@ const SignIn = () => {
           <br />
           <Button variant="contained" color="secondary" onClick={handleGetEnrolled}>
             Get Enrolled
+          </Button>
+          <br />
+          <br />
+          <Button variant="contained" color="primary" onClick={handleGetMarks}>
+            See the Marks
           </Button>
         </>
       ) : (
