@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import SignOutButton from "@/components/signout";
+import { Tab, Tabs } from "@mui/material";
+import TabPanel from "@/components/TabPanel";
 import {
   Table,
   TableBody,
@@ -14,21 +17,37 @@ import {
   Box,
 } from "@mui/material";
 
-const UserDataPage = () => {
-  const { data: session } = useSession();
-  const [userData, setUserData] = useState(null);
-  const router = useRouter();
+interface UserDataPageProps {
+  // Define your props if any
+}
 
-  interface UserData {
-    date: string;
-    type: string;
-    totalMarks: number;
-    marksScored: number;
-    sillyError: number;
-    revision: number;
-    toughness: number;
-    theory: number;
-  }
+interface TestScore {
+  date: string;
+  type: string;
+  totalMarks: number;
+  [key: string]: any; // Allows any additional subject-specific properties
+}
+
+interface SubjectTest {
+  marksScored: number;
+  sillyError: number;
+  revision: number;
+  toughness: number;
+  theory: number;
+}
+
+interface UserData {
+  Name: string;
+  Coaching: string;
+  Class: string;
+  testScores: TestScore[];
+}
+
+const UserDataPage: React.FC<UserDataPageProps> = (props) => {
+  const { data: session } = useSession();
+  const router = useRouter();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [selectedTab, setSelectedTab] = useState(0);
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwt");
@@ -38,7 +57,8 @@ const UserDataPage = () => {
       return;
     }
 
-    fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
+    // fetch(`http://localhost:3001/mainsdata`, {
+      fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -57,71 +77,76 @@ const UserDataPage = () => {
       .catch((error) => {
         console.error("Error fetching user data:", error.message);
       });
-  }, [session]);
-  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  }, []);
+
+  // console.log(userData);
+
+  const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
+    setSelectedTab(newValue);
+  };
+
+  if (!userData || !userData.testScores) {
+    // If userData or userData.testScores is undefined, you can handle it here
+    return null;
+  }
+
+  const subjects = Object.keys(userData.testScores[0]).filter(
+    (key) => key !== "date" && key !== "type" && key !== "totalMarks"
+  );
 
   return (
-    <div style={{ textAlign: "center", marginTop: "20px" }}>
-      <Typography variant="h3">User Data</Typography>
+    <>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <Typography variant="h3">User Data</Typography>
 
-      <Box display="flex" justifyContent="space-between">
-        <TableContainer
-          component={Paper}
-          style={{ width: "48%", marginRight: "2%" }}
-        >
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Date</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Total Marks</TableCell>
-                <TableCell>Maths Score</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array.isArray(userData) &&
-                (userData as UserData[]).map((user: UserData, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell>{new Date(user.date).toLocaleDateString('en-GB')}</TableCell>
-                    <TableCell>{user.type}</TableCell>
-                    <TableCell>{user.totalMarks}</TableCell>
-                    <TableCell>{user.marksScored}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {userData.testScores.length > 0 && (
+          <Tabs value={selectedTab} onChange={handleChangeTab} centered>
+            {subjects.map((subject, index) => (
+              <Tab key={index} label={subject} />
+            ))}
+          </Tabs>
+        )}
 
-        <TableContainer
-          component={Paper}
-          style={{ width: "48%", marginLeft: "2%" }}
-        >
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Silly Error</TableCell>
-                <TableCell>Slight Revision</TableCell>
-                <TableCell>Toughness</TableCell>
-                <TableCell>Theory</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {Array.isArray(userData) &&
-                (userData as UserData[]).map((user: UserData, index: number) => (
-                  <TableRow key={index}>
-                    <TableCell>{user.sillyError}</TableCell>
-                    <TableCell>{user.revision}</TableCell>
-                    <TableCell>{user.toughness}</TableCell>
-                    <TableCell>{user.theory}</TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-      <SignOutButton />
-    </div>
+        <TabPanel value={selectedTab} index={selectedTab}>
+          <TableContainer component={Paper} style={{ width: "100%" }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Total Marks</TableCell>
+                  <TableCell>Marks Scored</TableCell>
+                  <TableCell>Silly Error</TableCell>
+                  <TableCell>Revision</TableCell>
+                  <TableCell>Toughness</TableCell>
+                  <TableCell>Theory</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {userData.testScores
+                  .filter((test) => test[subjects[selectedTab]])
+                  .map((test, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{new Date(test.date).toLocaleDateString("en-GB")}</TableCell>
+                      <TableCell>{test.type}</TableCell>
+                      <TableCell>{test.totalMarks}</TableCell>
+                      <TableCell>{test[subjects[selectedTab]].marksScored}</TableCell>
+                      <TableCell>{test[subjects[selectedTab]].sillyError}</TableCell>
+                      <TableCell>{test[subjects[selectedTab]].revision}</TableCell>
+                      <TableCell>{test[subjects[selectedTab]].toughness}</TableCell>
+                      <TableCell>{test[subjects[selectedTab]].theory}</TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </TabPanel>
+
+        <SignOutButton />
+      </div>
+    </>
   );
 };
 
 export default UserDataPage;
+

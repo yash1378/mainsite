@@ -71,11 +71,6 @@ const generateButtonColors = (rows: number, columns: number): string[][] => {
 
 const SubjectSection: React.FC<SubjectSectionProps> = ({
   subject,
-  correct,
-  silly,
-  slight,
-  tough,
-  theory,
   setCorrect,
   setSilly,
   setSlight,
@@ -90,8 +85,10 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
     const newColors = [...buttonColors];
-    newColors[rowIndex][columnId] =
-      newColors[rowIndex][columnId] === "clicked" ? "" : "clicked";
+    
+    // Unselect other buttons in the same row
+    newColors[rowIndex] = newColors[rowIndex].map((_, index) => (index === columnId ? "clicked" : ""));
+
     setButtonColors(newColors);
     console.log(newColors);
 
@@ -205,16 +202,37 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 const MathsPage: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Add loading state
-  const [correct, setCorrect] = useState(0);
-  const [silly, setSilly] = useState(0);
-  const [slight, setSlight] = useState(0);
-  const [tough, setTough] = useState(0);
-  const [theory, setTheory] = useState(0);
+  const [correctm, setCorrectm] = useState(0);
+  const [sillym, setSillym] = useState(0);
+  const [slightm, setSlightm] = useState(0);
+  const [toughm, setToughm] = useState(0);
+  const [theorym, setTheorym] = useState(0);
+  const [correctp, setCorrectp] = useState(0);
+  const [sillyp, setSillyp] = useState(0);
+  const [slightp, setSlightp] = useState(0);
+  const [toughp, setToughp] = useState(0);
+  const [theoryp, setTheoryp] = useState(0);
+  const [correctc, setCorrectc] = useState(0);
+  const [sillyc, setSillyc] = useState(0);
+  const [slightc, setSlightc] = useState(0);
+  const [toughc, setToughc] = useState(0);
+  const [theoryc, setTheoryc] = useState(0);
+
+
 
   const handleSubmit = async () => {
     try {
       setLoading(true); // Set loading to true on form submission
       const data = localStorage.getItem("jwt");
+      if(router.query.date===undefined){
+        router.push({
+          pathname: "/tracker",
+        });
+      }
+      const date = router.query.date;
+      
+    
+      console.log(correctm, sillym, slightm, toughm, theorym, correctp, sillyp, slightp, toughp, theoryp, correctc, sillyc, slightc, toughc, theoryc)
       // const response = await fetch("http://localhost:3001/mainsdata", {
       const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
         method: "POST",
@@ -223,31 +241,46 @@ const MathsPage: React.FC = () => {
           Authorization: `Bearer ${data}`,
         },
         body: JSON.stringify({
-          correct: correct * 4,
-          silly: silly * 4,
-          slight: slight * 4,
-          tough: tough * 4,
-          theory: theory * 4,
+          date: date,
+          correctm: correctm * 4,
+          sillym: sillym * 4,
+          slightm: slightm * 4,
+          toughm: toughm * 4,
+          theorym: theorym * 4,
+          correctp: correctp * 4,
+          sillyp: sillyp * 4,
+          slightp: slightp * 4,
+          toughp: toughp * 4,
+          theoryp: theoryp * 4,
+          correctc: correctc * 4,
+          sillyc: sillyc * 4,
+          slightc: slightc * 4,
+          toughc: toughc * 4,
+          theoryc: theoryc * 4,
+
         }),
       });
 
       if (response.ok) {
-        setCorrect(0);
-        setSilly(0);
-        setSlight(0);
-        setTough(0);
-        setTheory(0);
+        setCorrectm(0);
+        setSillym(0);
+        setSlightm(0);
+        setToughm(0);
+        setTheorym(0);
+        setCorrectp(0);
+        setSillyp(0);
+        setSlightp(0);
+        setToughp(0);
+        setTheoryp(0);
+        setCorrectc(0);
+        setSillyc(0);
+        setSlightc(0);
+        setToughc(0);
+        setTheoryc(0);
         console.log(response);
 
         router.push({
           pathname: "/analysis",
-          query: {
-            correct: correct,
-            silly: silly,
-            slight: slight,
-            tough: tough,
-            theory: theory,
-          },
         });
       } else {
         console.log("Error");
@@ -260,7 +293,9 @@ const MathsPage: React.FC = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      {loading===true ? (<CircularProgress style={{ marginTop: "20px" }} />):(
+      {loading===true ? (
+        <CircularProgress/>
+      ):(
         <>
       <Typography variant="h2">Maths</Typography>
       <Typography variant="h4" style={{ margin: "30px" }}>
@@ -269,44 +304,44 @@ const MathsPage: React.FC = () => {
 
       <SubjectSection
         subject="Maths"
-        correct={correct}
-        silly={silly}
-        slight={slight}
-        tough={tough}
-        theory={theory}
-        setCorrect={setCorrect}
-        setSilly={setSilly}
-        setSlight={setSlight}
-        setTough={setTough}
-        setTheory={setTheory}
+        correct={correctm}
+        silly={sillym}
+        slight={slightm}
+        tough={toughm}
+        theory={theorym}
+        setCorrect={setCorrectm}
+        setSilly={setSillym}
+        setSlight={setSlightm}
+        setTough={setToughm}
+        setTheory={setTheorym}
       />
 
       <SubjectSection
         subject="Chemistry"
-        correct={correct}
-        silly={silly}
-        slight={slight}
-        tough={tough}
-        theory={theory}
-        setCorrect={setCorrect}
-        setSilly={setSilly}
-        setSlight={setSlight}
-        setTough={setTough}
-        setTheory={setTheory}
+        correct={correctc}
+        silly={sillyc}
+        slight={slightc}
+        tough={toughc}
+        theory={theoryc}
+        setCorrect={setCorrectc}
+        setSilly={setSillyc}
+        setSlight={setSlightc}
+        setTough={setToughc}
+        setTheory={setTheoryc}
       />
 
       <SubjectSection
         subject="Physics"
-        correct={correct}
-        silly={silly}
-        slight={slight}
-        tough={tough}
-        theory={theory}
-        setCorrect={setCorrect}
-        setSilly={setSilly}
-        setSlight={setSlight}
-        setTough={setTough}
-        setTheory={setTheory}
+        correct={correctp}
+        silly={sillyp}
+        slight={slightp}
+        tough={toughp}
+        theory={theoryp}
+        setCorrect={setCorrectp}
+        setSilly={setSillyp}
+        setSlight={setSlightp}
+        setTough={setToughp}
+        setTheory={setTheoryp}
       />
 
       <StyledButton variant="contained" color="primary" onClick={handleSubmit}>

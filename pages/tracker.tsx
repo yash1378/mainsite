@@ -40,6 +40,7 @@ const TestTracker: React.FC = () => {
     if(testType === 'mains'){
       Router.push({
         pathname: '/mains',
+        query: { date: selectedDate.toISOString().split('T')[0] },
       });
     }
     if(testType === 'advanced'){
