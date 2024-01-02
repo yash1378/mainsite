@@ -15,10 +15,6 @@ const SignIn = () => {
     // window.location.href = 'http://localhost:3001/api/auth/google';
   };
 
-  const handleSignInOTP = async () =>{
-    router.push("/otp")
-  }
-
   const handleSignOut = () => {
     // Clear the JWT from sessionStorage on sign-out
     // sessionStorage.removeItem('jwt');
@@ -49,7 +45,7 @@ const SignIn = () => {
     // Check for JWT in URL query params after redirect from backend
     const jwt = Array.isArray(router.query.jwt) ? router.query.jwt[0] : router.query.jwt;
     const param = Array.isArray(router.query.new) ? router.query.new[0] : router.query.new;
-    // console.log(param);
+    console.log(param);
   
     if(param === 'true'){
       setUser(true);
@@ -88,16 +84,10 @@ const SignIn = () => {
           </Button>
         </>
       ) : (
-        <>
+        // Otherwise, show the "Sign In with Google" and "Get Enrolled" buttons
           <Button variant="contained" color="primary" onClick={handleSignIn}>
             Sign In with Google
           </Button>
-          <br />
-          <br />
-          <Button variant="contained" color="primary" onClick={handleSignInOTP}>
-            Sign In Using Phone Number
-          </Button>
-        </>
 
       )}
     </div>
