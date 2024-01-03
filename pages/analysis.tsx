@@ -15,9 +15,11 @@ import {
   Paper,
   Typography,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import { Button } from "@mui/material";
 import Container from "@mui/material/Container";
+
   
 
 interface UserDataPageProps {
@@ -50,6 +52,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   const { data: session } = useSession();
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState(0);
   const handleNavigateToDataEntry = () => {
     // router.push("/"); // Replace "/data-entry" with the actual route for entering data
@@ -67,7 +70,6 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   };
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwt");
-
 
 
 
@@ -95,6 +97,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
       .then((userData) => {
         console.log(userData);
         setUserData(userData);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching user data:", error.message);
@@ -113,6 +116,16 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
     console.log("returned");
     return (
       <>
+      {loading ?(
+        <>
+        <div style={{ textAlign: "center",marginTop:"40vh" }}>
+        <CircularProgress/>
+        <Typography variant="h6" style={{ marginTop: 16 }}>
+          Loading...
+        </Typography>
+      </div>
+      </>
+      ):(
         <Container maxWidth="md">
           <Box
             display="flex"
@@ -138,6 +151,8 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
             </Paper>
           </Box>
         </Container>
+      )}
+
       </>
     );
   }
@@ -150,52 +165,66 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   return (
     <>
       <div style={{ textAlign: "center", marginTop: "20px" }}>
+        {loading ?(
+          <>
+          <div style={{ textAlign: "center",marginTop:"40vh" }}>
+          <CircularProgress/>
+          <Typography variant="h6" style={{ marginTop: 16 }}>
+            Loading...
+          </Typography>
+        </div>
+        </>
+        ):(
+          <>
         <Typography variant="h3">User Data</Typography>
 
-        {userData.testScores.length > 0 && (
-          <Tabs value={selectedTab} onChange={handleChangeTab} centered>
-            {subjects.map((subject, index) => (
-              <Tab key={index} label={subject} />
-            ))}
-          </Tabs>
+{userData.testScores.length > 0 && (
+  <Tabs value={selectedTab} onChange={handleChangeTab} centered>
+    {subjects.map((subject, index) => (
+      <Tab key={index} label={subject} />
+    ))}
+  </Tabs>
+)}
+
+<TabPanel value={selectedTab} index={selectedTab}>
+  <TableContainer component={Paper} style={{ width: "100%" }}>
+    <Table size="small">
+      <TableHead>
+        <TableRow>
+          <TableCell>Date</TableCell>
+          <TableCell>Type</TableCell>
+          <TableCell>Total Marks</TableCell>
+          <TableCell>Marks Scored</TableCell>
+          <TableCell>Silly Error</TableCell>
+          <TableCell>Revision</TableCell>
+          <TableCell>Toughness</TableCell>
+          <TableCell>Theory</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {userData.testScores
+          .filter((test) => test[subjects[selectedTab]])
+          .map((test, index) => (
+            <TableRow key={index}>
+              <TableCell>{new Date(test.date).toLocaleDateString("en-GB")}</TableCell>
+              <TableCell>{test.type}</TableCell>
+              <TableCell>{test.totalMarks}</TableCell>
+              <TableCell>{test[subjects[selectedTab]].marksScored}</TableCell>
+              <TableCell>{test[subjects[selectedTab]].sillyError}</TableCell>
+              <TableCell>{test[subjects[selectedTab]].revision}</TableCell>
+              <TableCell>{test[subjects[selectedTab]].toughness}</TableCell>
+              <TableCell>{test[subjects[selectedTab]].theory}</TableCell>
+            </TableRow>
+          ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+</TabPanel>
+
+<SignOutButton />
+        </>
         )}
 
-        <TabPanel value={selectedTab} index={selectedTab}>
-          <TableContainer component={Paper} style={{ width: "100%" }}>
-            <Table size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Total Marks</TableCell>
-                  <TableCell>Marks Scored</TableCell>
-                  <TableCell>Silly Error</TableCell>
-                  <TableCell>Revision</TableCell>
-                  <TableCell>Toughness</TableCell>
-                  <TableCell>Theory</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {userData.testScores
-                  .filter((test) => test[subjects[selectedTab]])
-                  .map((test, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{new Date(test.date).toLocaleDateString("en-GB")}</TableCell>
-                      <TableCell>{test.type}</TableCell>
-                      <TableCell>{test.totalMarks}</TableCell>
-                      <TableCell>{test[subjects[selectedTab]].marksScored}</TableCell>
-                      <TableCell>{test[subjects[selectedTab]].sillyError}</TableCell>
-                      <TableCell>{test[subjects[selectedTab]].revision}</TableCell>
-                      <TableCell>{test[subjects[selectedTab]].toughness}</TableCell>
-                      <TableCell>{test[subjects[selectedTab]].theory}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </TabPanel>
-
-        <SignOutButton />
       </div>
     </>
   );
