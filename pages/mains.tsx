@@ -1,5 +1,5 @@
 // MathsPage.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styled from "@emotion/styled";
@@ -14,6 +14,14 @@ import {
   Button,
   Typography,
   CircularProgress,
+} from "@mui/material";
+
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 
 interface SubjectSectionProps {
@@ -48,9 +56,13 @@ const COLORS: Colors = {
   Theory: "blue",
 };
 
+interface ConfirmationModalProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 // ... (rest of the code)
-
-
 
 const StyledButton = styled(Button)({
   backgroundColor: "#2196F3",
@@ -85,7 +97,7 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
     const newColors = [...buttonColors];
-  
+
     // Iterate over the whole row and adjust variables based on the previous selection
     newColors[rowIndex].forEach((value, index) => {
       if (value === "clicked") {
@@ -110,12 +122,14 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
         }
       }
     });
-  
+
     // Unselect other buttons in the same row
-    newColors[rowIndex] = newColors[rowIndex].map((_, index) => (index === columnId ? "clicked" : ""));
-  
+    newColors[rowIndex] = newColors[rowIndex].map((_, index) =>
+      index === columnId ? "clicked" : ""
+    );
+
     setButtonColors(newColors);
-  
+
     // Update the selected button
     switch (columnId) {
       case 0:
@@ -137,7 +151,6 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
         break;
     }
   };
-  
 
   return (
     <>
@@ -208,8 +221,14 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                       className={`button ${color}`}
                       onClick={() => handleButtonClick(rowIndex, columnId)}
                       style={{
-                        backgroundColor: color === "clicked" ? COLORS[Object.keys(COLORS)[columnId]] : "white",
-                        color: color === "clicked" ? "white" : COLORS[Object.keys(COLORS)[columnId]],
+                        backgroundColor:
+                          color === "clicked"
+                            ? COLORS[Object.keys(COLORS)[columnId]]
+                            : "white",
+                        color:
+                          color === "clicked"
+                            ? "white"
+                            : COLORS[Object.keys(COLORS)[columnId]],
                       }}
                     >
                       {Object.keys(COLORS)[columnId]}
@@ -243,24 +262,47 @@ const MathsPage: React.FC = () => {
   const [slightc, setSlightc] = useState(0);
   const [toughc, setToughc] = useState(0);
   const [theoryc, setTheoryc] = useState(0);
+  const [modal, setModal] = useState(false);
 
-
+  const handleModalOpen = () => {
+    setModal(true);
+  };
+  const handleModalClose = () => {
+    setModal(false);
+  };
 
   const handleSubmit = async () => {
     try {
+      setModal(false);
       setLoading(true); // Set loading to true on form submission
       const data = localStorage.getItem("jwt");
-      if(router.query.date===undefined){
+      if (router.query.date === undefined) {
         router.push({
           pathname: "/tracker",
         });
       }
       const date = router.query.date;
-      
-    
-      console.log(correctm, sillym, slightm, toughm, theorym, correctp, sillyp, slightp, toughp, theoryp, correctc, sillyc, slightc, toughc, theoryc)
+
+      console.log(
+        correctm,
+        sillym,
+        slightm,
+        toughm,
+        theorym,
+        correctp,
+        sillyp,
+        slightp,
+        toughp,
+        theoryp,
+        correctc,
+        sillyc,
+        slightc,
+        toughc,
+        theoryc
+      );
       const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
       // const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
+      // const response = await fetch("http://localhost:3001/mainsdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -268,22 +310,21 @@ const MathsPage: React.FC = () => {
         },
         body: JSON.stringify({
           date: date,
-          correctm: correctm ,
+          correctm: correctm,
           sillym: sillym,
           slightm: slightm,
           toughm: toughm,
           theorym: theorym,
           correctp: correctp,
-          sillyp: sillyp ,
-          slightp: slightp ,
-          toughp: toughp ,
-          theoryp: theoryp ,
+          sillyp: sillyp,
+          slightp: slightp,
+          toughp: toughp,
+          theoryp: theoryp,
           correctc: correctc,
-          sillyc: sillyc ,
-          slightc: slightc ,
-          toughc: toughc ,
-          theoryc: theoryc ,
-
+          sillyc: sillyc,
+          slightc: slightc,
+          toughc: toughc,
+          theoryc: theoryc,
         }),
       });
 
@@ -313,70 +354,118 @@ const MathsPage: React.FC = () => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-    } 
-
+    }
   };
 
   return (
     <div style={{ textAlign: "center" }}>
-      {loading===true ? (
-        <CircularProgress/>
-      ):(
+      {loading === true ? (
         <>
-      <Typography variant="h2">Maths</Typography>
-      <Typography variant="h4" style={{ margin: "30px" }}>
-        Single Correct
-      </Typography>
+        <div style={{ textAlign: "center",marginTop:"40vh" }}>
+        <CircularProgress />
+        <Typography variant="h6" style={{ marginTop: 16 }}>
+          Loading...
+        </Typography>
+      </div>
+      </>
+      ) : (
+        <>
+          {modal && (
+            <Dialog
+              open={modal}
+              PaperComponent={(props) => <Paper {...props} elevation={0} />} // Set elevation to 0 for a flat paper
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+            >
+              <DialogTitle style={{ backgroundColor: "#2196F3", color: "white" }}>
+                Confirm Submission
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to submit?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleModalClose}
+                  color="primary"
+                  variant="outlined"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  color="primary"
+                  variant="contained"
+                  autoFocus
+                  sx={{
+                    backgroundColor: "#1565C0",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#0D47A1",
+                    },
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          <Typography variant="h2">Track Test</Typography>
+          <Typography variant="h4" style={{ margin: "30px" }}>
+            Single Correct
+          </Typography>
 
-      <SubjectSection
-        subject="Maths"
-        correct={correctm}
-        silly={sillym}
-        slight={slightm}
-        tough={toughm}
-        theory={theorym}
-        setCorrect={setCorrectm}
-        setSilly={setSillym}
-        setSlight={setSlightm}
-        setTough={setToughm}
-        setTheory={setTheorym}
-      />
+          <SubjectSection
+            subject="Maths"
+            correct={correctm}
+            silly={sillym}
+            slight={slightm}
+            tough={toughm}
+            theory={theorym}
+            setCorrect={setCorrectm}
+            setSilly={setSillym}
+            setSlight={setSlightm}
+            setTough={setToughm}
+            setTheory={setTheorym}
+          />
 
-      <SubjectSection
-        subject="Chemistry"
-        correct={correctc}
-        silly={sillyc}
-        slight={slightc}
-        tough={toughc}
-        theory={theoryc}
-        setCorrect={setCorrectc}
-        setSilly={setSillyc}
-        setSlight={setSlightc}
-        setTough={setToughc}
-        setTheory={setTheoryc}
-      />
+          <SubjectSection
+            subject="Chemistry"
+            correct={correctc}
+            silly={sillyc}
+            slight={slightc}
+            tough={toughc}
+            theory={theoryc}
+            setCorrect={setCorrectc}
+            setSilly={setSillyc}
+            setSlight={setSlightc}
+            setTough={setToughc}
+            setTheory={setTheoryc}
+          />
 
-      <SubjectSection
-        subject="Physics"
-        correct={correctp}
-        silly={sillyp}
-        slight={slightp}
-        tough={toughp}
-        theory={theoryp}
-        setCorrect={setCorrectp}
-        setSilly={setSillyp}
-        setSlight={setSlightp}
-        setTough={setToughp}
-        setTheory={setTheoryp}
-      />
+          <SubjectSection
+            subject="Physics"
+            correct={correctp}
+            silly={sillyp}
+            slight={slightp}
+            tough={toughp}
+            theory={theoryp}
+            setCorrect={setCorrectp}
+            setSilly={setSillyp}
+            setSlight={setSlightp}
+            setTough={setToughp}
+            setTheory={setTheoryp}
+          />
 
-      <StyledButton variant="contained" color="primary" onClick={handleSubmit}>
-        Submit
-      </StyledButton>
+          <StyledButton
+            variant="contained"
+            color="primary"
+            onClick={handleModalOpen}
+          >
+            Submit
+          </StyledButton>
         </>
       )}
-
-
     </div>
   );
 };

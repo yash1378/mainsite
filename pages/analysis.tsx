@@ -16,6 +16,9 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { Button } from "@mui/material";
+import Container from "@mui/material/Container";
+  
 
 interface UserDataPageProps {
   // Define your props if any
@@ -48,15 +51,31 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   const router = useRouter();
   const [userData, setUserData] = useState<UserData | null>(null);
   const [selectedTab, setSelectedTab] = useState(0);
-
+  const handleNavigateToDataEntry = () => {
+    // router.push("/"); // Replace "/data-entry" with the actual route for entering data
+    const pre = router.query.new;
+    if(pre==="true"){
+      router.push({
+        pathname: "/getenroll",
+      });
+    }
+    else{
+      router.push({
+        pathname: "/tracker",
+      });
+    }
+  };
   useEffect(() => {
     const jwtToken = localStorage.getItem("jwt");
+
+
+
 
     if (!jwtToken) {
       console.error("JWT token not available");
       return;
     }
-
+    // fetch(`http://localhost:3001/mainsdata`, {
     fetch(`https://jsgobackend.onrender.com/mainsdata`, {
       // fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
       method: "GET",
@@ -87,12 +106,42 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+  console.log("userData",userData)
 
-  if (!userData || !userData.testScores) {
-    // If userData or userData.testScores is undefined, you can handle it here
-    console.log("returned")
-    return null;
+  if (userData === null || userData.testScores.length === 0) {
+    // If userData or userData.testScores is undefined or null, you can handle it here
+    console.log("returned");
+    return (
+      <>
+        <Container maxWidth="md">
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="80vh"
+          >
+            <Paper elevation={3} style={{ padding: "20px", width: "100%" }}>
+              <Typography variant="h4" align="center" gutterBottom>
+                No data available to display.
+              </Typography>
+              <Typography variant="body1" align="center" paragraph>
+                Please enter your first set of data.
+              </Typography>
+              <Button
+                variant="contained"
+                color="primary"
+                fullWidth
+                onClick={handleNavigateToDataEntry}
+              >
+                Enter Data
+              </Button>
+            </Paper>
+          </Box>
+        </Container>
+      </>
+    );
   }
+  
 
   const subjects = Object.keys(userData.testScores[0]).filter(
     (key) => key !== "date" && key !== "type" && key !== "totalMarks"

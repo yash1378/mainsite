@@ -1,0 +1,511 @@
+// MathsPage.tsx
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import styled from "@emotion/styled";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Typography,
+  CircularProgress,
+  Tab,
+  Tabs,
+} from "@mui/material";
+
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+
+// ... (other imports)
+
+// ... (other interfaces and constants)
+
+// ... (StyledButton and other functions)
+
+
+interface SubjectSectionProps {
+    subject: string;
+    correct: number;
+    silly: number;
+    slight: number;
+    tough: number;
+    theory: number;
+    setCorrect: React.Dispatch<React.SetStateAction<number>>;
+    setSilly: React.Dispatch<React.SetStateAction<number>>;
+    setSlight: React.Dispatch<React.SetStateAction<number>>;
+    setTough: React.Dispatch<React.SetStateAction<number>>;
+    setTheory: React.Dispatch<React.SetStateAction<number>>;
+  }
+  // ... (other imports)
+  
+  interface Colors {
+    Correct: string;
+    "Silly Error": string;
+    "Slight Revision": string;
+    Toughness: string;
+    Theory: string;
+    [key: string]: string; // Index signature for dynamic keys
+  }
+  
+  const COLORS: Colors = {
+    Correct: "green",
+    "Silly Error": "red",
+    "Slight Revision": "violet",
+    Toughness: "blue",
+    Theory: "blue",
+  };
+  
+  interface ConfirmationModalProps {
+    open: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+  }
+  
+  // ... (rest of the code)
+  
+  const StyledButton = styled(Button)({
+    backgroundColor: "#2196F3",
+    color: "white",
+    fontSize: "20px",
+    width: "90%",
+    marginTop: "30px",
+    marginBottom: "30px",
+    "&:hover": {
+      backgroundColor: "#1565C0",
+      color: "white",
+    },
+  });
+  
+  const generateButtonColors = (rows: number, columns: number): string[][] => {
+    return new Array(rows).fill("").map(() => Array(columns).fill(""));
+  };
+
+const SubjectSection: React.FC<SubjectSectionProps> = ({
+  subject,
+  setCorrect,
+  setSilly,
+  setSlight,
+  setTough,
+  setTheory,
+}) => {
+    const [buttonColors, setButtonColors] = useState<string[][]>(
+        generateButtonColors(30, 5)
+      );
+    
+      const router = useRouter();
+    
+      const handleButtonClick = (rowIndex: number, columnId: number) => {
+        const newColors = [...buttonColors];
+    
+        // Iterate over the whole row and adjust variables based on the previous selection
+        newColors[rowIndex].forEach((value, index) => {
+          if (value === "clicked") {
+            switch (index) {
+              case 0:
+                setCorrect((prev) => prev - 4);
+                break;
+              case 1:
+                setSilly((prev) => prev - 1);
+                break;
+              case 2:
+                setSlight((prev) => prev - 1);
+                break;
+              case 3:
+                setTough((prev) => prev - 1);
+                break;
+              case 4:
+                setTheory((prev) => prev - 1);
+                break;
+              default:
+                break;
+            }
+          }
+        });
+    
+        // Unselect other buttons in the same row
+        newColors[rowIndex] = newColors[rowIndex].map((_, index) =>
+          index === columnId ? "clicked" : ""
+        );
+    
+        setButtonColors(newColors);
+    
+        // Update the selected button
+        switch (columnId) {
+          case 0:
+            setCorrect((prev) => prev + 4);
+            break;
+          case 1:
+            setSilly((prev) => prev + 1);
+            break;
+          case 2:
+            setSlight((prev) => prev + 1);
+            break;
+          case 3:
+            setTough((prev) => prev + 1);
+            break;
+          case 4:
+            setTheory((prev) => prev + 1);
+            break;
+          default:
+            break;
+        }
+      };
+      console.log(buttonColors);
+    
+      return (
+        <>
+          <Typography variant="h4" style={{ margin: "30px" }}>
+            {subject}
+          </Typography>
+          <TableContainer
+            component={Paper}
+            style={{
+              width: "90%",
+              margin: "auto",
+              maxHeight: "70vh",
+              overflowY: "auto",
+              scrollbarColor: "grey black",
+              scrollbarWidth: "thin",
+            }}
+          >
+            <style>
+              {`
+                ::-webkit-scrollbar {
+                  width: 10px;
+                }
+                ::-webkit-scrollbar-thumb {
+                  background-color: grey;
+                  border-radius: 5px;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                  background-color: #555;
+                }
+                ::-webkit-scrollbar-track {
+                  background-color: black;
+                }
+              `}
+            </style>
+            <Table className="subject-table" size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>No.</TableCell>
+                  {Object.keys(COLORS).map((column, columnId) => (
+                    <TableCell key={columnId}>
+                      <Button
+                        variant="contained"
+                        className="header-button"
+                        style={{
+                          backgroundColor: COLORS[column],
+                          color: "white",
+                          fontWeight: "bold",
+                          borderRadius: "5px",
+                          margin: "1px",
+                          textTransform: "capitalize",
+                          fontSize: "19px",
+                        }}
+                      >
+                        {column}
+                      </Button>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {buttonColors.map((row, rowIndex) => (
+                  <TableRow key={rowIndex}>
+                    <TableCell>{rowIndex + 1}</TableCell>
+                    {row.map((color, columnId) => (
+                      <TableCell key={columnId}>
+                        <Button
+                          variant="contained"
+                          className={`button ${color}`}
+                          onClick={() => handleButtonClick(rowIndex, columnId)}
+                          style={{
+                            backgroundColor:
+                              color === "clicked"
+                                ? COLORS[Object.keys(COLORS)[columnId]]
+                                : "white",
+                            color:
+                              color === "clicked"
+                                ? "white"
+                                : COLORS[Object.keys(COLORS)[columnId]],
+                          }}
+                        >
+                          {Object.keys(COLORS)[columnId]}
+                        </Button>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      );
+    };
+
+const MathsPage: React.FC = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [modal, setModal] = useState(false);
+  const [value, setValue] = useState(0); // State for managing Tabs
+  const [correctm, setCorrectm] = useState(0);
+  const [sillym, setSillym] = useState(0);
+  const [slightm, setSlightm] = useState(0);
+  const [toughm, setToughm] = useState(0);
+  const [theorym, setTheorym] = useState(0);
+  const [correctp, setCorrectp] = useState(0);
+  const [sillyp, setSillyp] = useState(0);
+  const [slightp, setSlightp] = useState(0);
+  const [toughp, setToughp] = useState(0);
+  const [theoryp, setTheoryp] = useState(0);
+  const [correctc, setCorrectc] = useState(0);
+  const [sillyc, setSillyc] = useState(0);
+  const [slightc, setSlightc] = useState(0);
+  const [toughc, setToughc] = useState(0);
+  const [theoryc, setTheoryc] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const handleModalOpen = () => {
+    setModal(true);
+  };
+
+  const handleModalClose = () => {
+    setModal(false);
+  };
+
+  const handleSubmit = async () => {
+    // ... (rest of the code for handleSubmit)
+    try {
+      setModal(false);
+      setLoading(true); // Set loading to true on form submission
+      const data = localStorage.getItem("jwt");
+      if (router.query.date === undefined) {
+        router.push({
+          pathname: "/tracker",
+        });
+      }
+      const date = router.query.date;
+
+      console.log(
+        correctm,
+        sillym,
+        slightm,
+        toughm,
+        theorym,
+        correctp,
+        sillyp,
+        slightp,
+        toughp,
+        theoryp,
+        correctc,
+        sillyc,
+        slightc,
+        toughc,
+        theoryc
+      );
+      // const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
+      // const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
+      const response = await fetch("http://localhost:3001/mainsdata", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${data}`,
+        },
+        body: JSON.stringify({
+          date: date,
+          correctm: correctm,
+          sillym: sillym,
+          slightm: slightm,
+          toughm: toughm,
+          theorym: theorym,
+          correctp: correctp,
+          sillyp: sillyp,
+          slightp: slightp,
+          toughp: toughp,
+          theoryp: theoryp,
+          correctc: correctc,
+          sillyc: sillyc,
+          slightc: slightc,
+          toughc: toughc,
+          theoryc: theoryc,
+        }),
+      });
+
+      if (response.ok) {
+        setCorrectm(0);
+        setSillym(0);
+        setSlightm(0);
+        setToughm(0);
+        setTheorym(0);
+        setCorrectp(0);
+        setSillyp(0);
+        setSlightp(0);
+        setToughp(0);
+        setTheoryp(0);
+        setCorrectc(0);
+        setSillyc(0);
+        setSlightc(0);
+        setToughc(0);
+        setTheoryc(0);
+        console.log(response);
+
+        router.push({
+          pathname: "/analysis",
+        });
+      } else {
+        console.log("Error");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      {loading === true ? (
+        <>
+          <div style={{ textAlign: "center", marginTop: "40vh" }}>
+            <CircularProgress />
+            <Typography variant="h6" style={{ marginTop: 16 }}>
+              Loading...
+            </Typography>
+          </div>
+        </>
+      ) : (
+        <>
+          {modal && (
+            <Dialog
+              open={modal}
+              PaperComponent={(props) => (
+                <Paper {...props} elevation={0} />
+              )}
+              style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+            >
+              <DialogTitle
+                style={{ backgroundColor: "#2196F3", color: "white" }}
+              >
+                Confirm Submission
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Are you sure you want to submit?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleModalClose}
+                  color="primary"
+                  variant="outlined"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSubmit}
+                  color="primary"
+                  variant="contained"
+                  autoFocus
+                  sx={{
+                    backgroundColor: "#1565C0",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#0D47A1",
+                    },
+                  }}
+                >
+                  Confirm
+                </Button>
+              </DialogActions>
+            </Dialog>
+          )}
+
+          <Typography variant="h2">Maths</Typography>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+            style={{ marginTop: "20px" }}
+          >
+            <Tab label="Maths" />
+            <Tab label="Chemistry" />
+            <Tab label="Physics" />
+          </Tabs>
+
+          {value === 0 && (
+            <SubjectSection
+              subject="Maths"
+              correct={correctm}
+              silly={sillym}
+              slight={slightm}
+              tough={toughm}
+              theory={theorym}
+              setCorrect={setCorrectm}
+              setSilly={setSillym}
+              setSlight={setSlightm}
+              setTough={setToughm}
+              setTheory={setTheorym}
+              // ... (other props for Maths SubjectSection)
+            />
+          )}
+          {value === 1 && (
+            <SubjectSection
+              subject="Chemistry"
+              correct={correctc}
+              silly={sillyc}
+              slight={slightc}
+              tough={toughc}
+              theory={theoryc}
+              setCorrect={setCorrectc}
+              setSilly={setSillyc}
+              setSlight={setSlightc}
+              setTough={setToughc}
+              setTheory={setTheoryc}
+              // ... (other props for Chemistry SubjectSection)
+            />
+          )}
+          {value === 2 && (
+            <SubjectSection
+              subject="Physics"
+              correct={correctp}
+              silly={sillyp}
+              slight={slightp}
+              tough={toughp}
+              theory={theoryp}
+              setCorrect={setCorrectp}
+              setSilly={setSillyp}
+              setSlight={setSlightp}
+              setTough={setToughp}
+              setTheory={setTheoryp}
+              // ... (other props for Physics SubjectSection)
+            />
+          )}
+
+          <StyledButton
+            variant="contained"
+            color="primary"
+            onClick={handleModalOpen}
+          >
+            Submit
+          </StyledButton>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default MathsPage;
