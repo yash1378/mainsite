@@ -66,8 +66,8 @@ function MyOtherPage() {
   const handleSubmit = async () =>{
     // Perform any submission logic here
     const token = localStorage.getItem('jwt');
-    // const response = await fetch('http://localhost:3001/api/submit', {
-    const response = await fetch('https://jsmainsitebackend.onrender.com/api/submit', {
+    const response = await fetch('https://jsgobackend.onrender.com/api/submit', {
+    // const response = await fetch('https://jsmainsitebackend.onrender.com/api/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

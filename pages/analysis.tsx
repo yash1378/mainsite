@@ -57,21 +57,24 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
       return;
     }
 
-    // fetch(`http://localhost:3001/mainsdata`, {
-      fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
+    fetch(`https://jsgobackend.onrender.com/mainsdata`, {
+      // fetch(`https://jsmainsitebackend.onrender.com/mainsdata`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${jwtToken}`,
       },
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch user data");
         }
-        return response.json();
+        const data = await response.json();
+        console.log(data);
+        return data;
       })
       .then((userData) => {
+        console.log(userData);
         setUserData(userData);
       })
       .catch((error) => {
@@ -87,6 +90,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
 
   if (!userData || !userData.testScores) {
     // If userData or userData.testScores is undefined, you can handle it here
+    console.log("returned")
     return null;
   }
 

@@ -259,8 +259,8 @@ const MathsPage: React.FC = () => {
       
     
       console.log(correctm, sillym, slightm, toughm, theorym, correctp, sillyp, slightp, toughp, theoryp, correctc, sillyc, slightc, toughc, theoryc)
-      // const response = await fetch("http://localhost:3001/mainsdata", {
-      const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
+      const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
+      // const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
