@@ -1,5 +1,6 @@
 // pages/test-tracker.tsx
-import React, { useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import Head from "next/head";
 import {
   Typography,
   Container,
@@ -12,7 +13,7 @@ import {
   SelectChangeEvent,
   CircularProgress,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { border, styled } from "@mui/system";
 import Grow from "@mui/material/Grow";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
@@ -86,15 +87,24 @@ const TestTracker: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <style>
+          {`
+          body {
+            background-color: ${loading ? "white" : "#154c79"};
+          }
+        `}
+        </style>
+      </Head>
       {loading ? (
         <>
-        <div style={{ textAlign: "center",marginTop:"40vh" }}>
-        <CircularProgress />
-        <Typography variant="h6" style={{ marginTop: 16 }}>
-          Loading...
-        </Typography>
-      </div>
-      </>
+          <div style={{ textAlign: "center", marginTop: "40vh" }}>
+            <CircularProgress />
+            <Typography variant="h6" style={{ marginTop: 16 }}>
+              Loading...
+            </Typography>
+          </div>
+        </>
       ) : (
         <Container
           style={{
@@ -102,47 +112,79 @@ const TestTracker: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            height: "100vh", // Adjust if needed to center vertically in the viewport
+            height: "98vh", // Adjust if needed to center vertically in the viewport
+            backgroundColor: "#063970",
+            borderRadius: "15px",
+            boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
           }}
         >
-          <Typography variant="h4" gutterBottom>
-            Create Your Test Tracker
+          <Typography
+            variant="h4"
+            gutterBottom
+            style={{
+              fontFamily: "'Graphik', sans-serif",
+              color: "white",
+            }}
+          >
+            <b>Create Your Test Tracker</b>
           </Typography>
-          <form style={{ width: "100%", maxWidth: "400px" }}>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel id="test-type-label">Test Type</InputLabel>
-              <Select
-                label="Test Type"
-                id="test-type"
-                value={testType}
-                onChange={handleTestTypeChange}
+          {/* New div element with light sky blue background */}
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "10px",
+              // width: "100%",
+              height: "100%",
+              maxHeight: "300px",
+              maxWidth: "700px",
+              boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
+              display: "flex", // Use flexbox for layout
+              flexDirection: "column", // Arrange children vertically
+              justifyContent: "center", // Center children vertically
+              alignItems: "center", // Center children horizontally
+            }}
+          >
+            <form style={{ width: "100%", height: "100%", padding: "4vh" }}>
+              {/* Existing form content */}
+              <FormControl fullWidth variant="outlined" margin="normal">
+                <InputLabel id="test-type-label">Test Type</InputLabel>
+                <Select
+                  label="Test Type"
+                  id="test-type"
+                  value={testType}
+                  onChange={handleTestTypeChange}
+                  style={{ color: "#063970" }}
+                >
+                  <MenuItem value="mains">Classic Mains</MenuItem>
+                  <MenuItem value="advanced">Classic Advanced</MenuItem>
+                  <MenuItem value="custom">Custom Test</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Select Date"
+                type="date"
+                id="test-date"
+                value={selectedDate.toISOString().split("T")[0]}
+                onChange={(e) => handleDateChange(new Date(e.target.value))}
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <StyledButton
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                style={{ marginTop: "16px" }} // Add some margin at the top
               >
-                <MenuItem value="mains">Classic Mains</MenuItem>
-                <MenuItem value="advanced">Classic Advanced</MenuItem>
-                <MenuItem value="custom">Custom Test</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="Select Date"
-              type="date"
-              id="test-date"
-              value={selectedDate.toISOString().split("T")[0]} // Format date as 'YYYY-MM-DD'
-              onChange={(e) => handleDateChange(new Date(e.target.value))}
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <StyledButton
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-            >
-              Submit
-            </StyledButton>
-          </form>
+                Submit
+              </StyledButton>
+            </form>
+          </div>
+
           {pre ? (
             <Snackbar
               open={open}

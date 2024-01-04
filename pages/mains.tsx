@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styled from "@emotion/styled";
+import Head from "next/head";
 import {
   Table,
   TableBody,
@@ -50,10 +51,10 @@ interface Colors {
 
 const COLORS: Colors = {
   Correct: "green",
-  "Silly Error": "red",
-  "Slight Revision": "violet",
-  Toughness: "blue",
-  Theory: "blue",
+  "Silly Error": "#Aa0000",
+  "Slight Revision": "#331577",
+  Toughness: "#1e81b0",
+  Theory: "#0c016c",
 };
 
 interface ConfirmationModalProps {
@@ -154,28 +155,42 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
 
   return (
     <>
-      <Typography variant="h4" style={{ margin: "30px" }}>
+
+      <Typography variant="h4" color='white' style={{ margin: "30px" }}>
         {subject}
       </Typography>
+      <div
+    style={{
+      backgroundColor: "#e6f4f7",
+      borderRadius: "10px",
+      boxShadow: "0 0 10px rgba(8, 8, 8, 0.7)",
+      padding: "5px",
+      margin: "10px",
+      textAlign: "center",
+    }}
+    >
       <TableContainer
         component={Paper}
         style={{
-          width: "90%",
+          width: "100%",
           margin: "auto",
           maxHeight: "70vh",
           overflowY: "auto",
           scrollbarColor: "grey black",
           scrollbarWidth: "thin",
+          backgroundColor: "#e6f4f7",
+
         }}
       >
         <style>
           {`
             ::-webkit-scrollbar {
               width: 10px;
+              border-radius: 10px;
             }
             ::-webkit-scrollbar-thumb {
-              background-color: grey;
-              border-radius: 5px;
+              background-color: #555 ;
+              border-radius: 10px;
             }
             ::-webkit-scrollbar-thumb:hover {
               background-color: #555;
@@ -240,6 +255,7 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
           </TableBody>
         </Table>
       </TableContainer>
+      </div>
     </>
   );
 };
@@ -300,8 +316,8 @@ const MathsPage: React.FC = () => {
         toughc,
         theoryc
       );
-      const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
-      // const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
+      // const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
+      const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
       // const response = await fetch("http://localhost:3001/mainsdata", {
         method: "POST",
         headers: {
@@ -358,6 +374,16 @@ const MathsPage: React.FC = () => {
   };
 
   return (
+    <>
+      <Head>
+        <style>
+          {`
+          body {
+            background-color: ${loading ? "white" : "#154c79"};
+          }
+        `}
+        </style>
+      </Head>
     <div style={{ textAlign: "center" }}>
       {loading === true ? (
         <>
@@ -410,10 +436,25 @@ const MathsPage: React.FC = () => {
               </DialogActions>
             </Dialog>
           )}
-          <Typography variant="h2">Track Test</Typography>
-          <Typography variant="h4" style={{ margin: "30px" }}>
-            Single Correct
-          </Typography>
+          <div
+          style={{
+            backgroundColor: "#063970",
+            borderRadius: "15px",
+            boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
+            padding: "20px",
+            margin: "20px",
+            textAlign: "center",
+          }} 
+          >
+          <Typography variant="h2"
+              style={{
+                fontFamily: "'Graphik', sans-serif",
+                color: "white",
+              }} 
+           ><b>Track Test</b></Typography>
+          {/* <Typography variant="h4" style={{ margin: "30px" }} color='white'>
+            <b>Single Correct</b>
+          </Typography> */}
 
           <SubjectSection
             subject="Maths"
@@ -464,9 +505,11 @@ const MathsPage: React.FC = () => {
           >
             Submit
           </StyledButton>
+          </div>
         </>
       )}
     </div>
+    </>
   );
 };
 
