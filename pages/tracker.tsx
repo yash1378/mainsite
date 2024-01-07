@@ -92,6 +92,16 @@ const TestTracker: React.FC = () => {
           {`
           body {
             background-color: ${loading ? "white" : "#154c79"};
+            display: block;
+            background-image: url('/bg.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            border-radius: 15px;
+            box-shadow: 0px 0px 10px 0px rgba(7, 7, 7, 0.8);
+            padding: 20px;
+            margin: 20px;
+            text-align: center;
           }
         `}
         </style>
@@ -112,14 +122,13 @@ const TestTracker: React.FC = () => {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            height: "98vh", // Adjust if needed to center vertically in the viewport
-            backgroundColor: "#063970",
+            height: "92vh", // Adjust if needed to center vertically in the viewport
             borderRadius: "15px",
-            boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
+            // boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
           }}
         >
           <Typography
-            variant="h4"
+            variant="h2"
             gutterBottom
             style={{
               fontFamily: "'Graphik', sans-serif",
