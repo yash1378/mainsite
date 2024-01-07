@@ -173,13 +173,13 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
   return (
     <>
       <Typography variant="h4" color="white" style={{ margin: "30px" }}>
-        {subject}
+        <b>        {subject}</b>
       </Typography>
       <div
         style={{
           backgroundColor: "transparent",
           borderRadius: "10px",
-          boxShadow: "0 0 10px rgba(8, 8, 8, 0.7)",
+          // boxShadow: "0 0 10px rgba(8, 8, 8, 0.7)",
           padding: "5px",
           margin: "10px",
           textAlign: "center",
@@ -218,13 +218,14 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
           <Table className="subject-table" size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{color:'white'}}>No.</TableCell>
+                <TableCell style={{color:'white',fontSize:'18px'}}><b>No.</b></TableCell>
                 {Object.keys(COLORS).map((column, columnId) => (
                   <TableCell key={columnId}>
                     <Button
                       variant="contained"
                       className="header-button"
                       style={{
+                        width: "100%",
                         backgroundColor: COLORS[column],
                         color: "white",
                         fontWeight: "bold",
@@ -243,7 +244,7 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
             <TableBody>
               {buttonColors.map((row, rowIndex) => (
                 <TableRow key={rowIndex}>
-                  <TableCell style={{color:'white'}}>{rowIndex + 1}</TableCell>
+                  <TableCell style={{color:'white',fontSize:'18px'}}><b>{rowIndex + 1}</b></TableCell>
                   {row.map((color, columnId) => (
                     <TableCell key={columnId}>
                       <Button
@@ -253,12 +254,14 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                         onMouseLeave={handleMouseLeave}
                         onClick={() => handleButtonClick(rowIndex, columnId)}
                         style={{
+                          width: "100%",
+                          fontSize: "18px",
                           backgroundColor:
                             color === "clicked"
                               ? COLORS[Object.keys(COLORS)[columnId]]
                               : hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
-                              ? hoverStyle.background
-                              : "#334244",
+                              ? COLORS[Object.keys(COLORS)[columnId]]
+                              : "#383838",
                           color:
                             color === "clicked"
                               ? "white"
@@ -267,11 +270,11 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                               : "white",
                           border:
                           hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
-                            ? "1px solid #CBD5E0"
+                            ? "none"
                             : "none",
                         }}
                       >
-                        {Object.keys(COLORS)[columnId]}
+                        {columnId === 0 ? "+4" : (columnId === 1 || columnId === 2) ? "-1" : "0"}
                       </Button>
                     </TableCell>
                   ))}
@@ -545,6 +548,18 @@ const MathsPage: React.FC = () => {
           >
             Submit
           </StyledButton>
+          <StyledButton
+            variant="contained"
+            color="primary"
+            onClick={()=>{
+              router.push({
+                pathname: "/tracker",
+              });
+            }}
+          >
+            Go Back
+          </StyledButton>
+
           </div>
         </>
       )}
