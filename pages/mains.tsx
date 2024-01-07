@@ -94,6 +94,8 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     generateButtonColors(30, 5)
   );
 
+  const [hoveredButton, setHoveredButton] = useState<{ rowIndex: number; columnId: number } | null>(null);
+
   const router = useRouter();
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
@@ -153,112 +155,136 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     }
   };
 
+  const handleMouseEnter = (rowIndex: number, columnId: number) => {
+    setHoveredButton({ rowIndex, columnId });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredButton(null);
+  };
+  const hoverStyle = {
+    border: "1px solid #CBD5E0",
+    color: "white",
+    background: "transparent",
+    boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
+  };
+
+
   return (
     <>
-
-      <Typography variant="h4" color='white' style={{ margin: "30px" }}>
+      <Typography variant="h4" color="white" style={{ margin: "30px" }}>
         {subject}
       </Typography>
       <div
-    style={{
-      backgroundColor: "#e6f4f7",
-      borderRadius: "10px",
-      boxShadow: "0 0 10px rgba(8, 8, 8, 0.7)",
-      padding: "5px",
-      margin: "10px",
-      textAlign: "center",
-    }}
-    >
-      <TableContainer
-        component={Paper}
         style={{
-          width: "100%",
-          margin: "auto",
-          maxHeight: "70vh",
-          overflowY: "auto",
-          scrollbarColor: "grey black",
-          scrollbarWidth: "thin",
-          backgroundColor: "#e6f4f7",
-
+          backgroundColor: "transparent",
+          borderRadius: "10px",
+          boxShadow: "0 0 10px rgba(8, 8, 8, 0.7)",
+          padding: "5px",
+          margin: "10px",
+          textAlign: "center",
         }}
       >
-        <style>
-          {`
-            ::-webkit-scrollbar {
-              width: 10px;
-              border-radius: 10px;
-            }
-            ::-webkit-scrollbar-thumb {
-              background-color: #555 ;
-              border-radius: 10px;
-            }
-            ::-webkit-scrollbar-thumb:hover {
-              background-color: #555;
-            }
-            ::-webkit-scrollbar-track {
-              background-color: black;
-            }
-          `}
-        </style>
-        <Table className="subject-table" size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>No.</TableCell>
-              {Object.keys(COLORS).map((column, columnId) => (
-                <TableCell key={columnId}>
-                  <Button
-                    variant="contained"
-                    className="header-button"
-                    style={{
-                      backgroundColor: COLORS[column],
-                      color: "white",
-                      fontWeight: "bold",
-                      borderRadius: "5px",
-                      margin: "1px",
-                      textTransform: "capitalize",
-                      fontSize: "19px",
-                    }}
-                  >
-                    {column}
-                  </Button>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {buttonColors.map((row, rowIndex) => (
-              <TableRow key={rowIndex}>
-                <TableCell>{rowIndex + 1}</TableCell>
-                {row.map((color, columnId) => (
+        <TableContainer
+          component={Paper}
+          style={{
+            width: "100%",
+            margin: "auto",
+            maxHeight: "70vh",
+            overflowY: "auto",
+            scrollbarColor: "grey black",
+            scrollbarWidth: "thin",
+            backgroundColor: "transparent",
+          }}
+        >
+          <style>
+            {`
+              ::-webkit-scrollbar {
+                width: 10px;
+                border-radius: 10px;
+              }
+              ::-webkit-scrollbar-thumb {
+                background-color: #555 ;
+                border-radius: 10px;
+              }
+              ::-webkit-scrollbar-thumb:hover {
+                background-color: #555;
+              }
+              ::-webkit-scrollbar-track {
+                background-color: black;
+              }
+            `}
+          </style>
+          <Table className="subject-table" size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{color:'white'}}>No.</TableCell>
+                {Object.keys(COLORS).map((column, columnId) => (
                   <TableCell key={columnId}>
                     <Button
                       variant="contained"
-                      className={`button ${color}`}
-                      onClick={() => handleButtonClick(rowIndex, columnId)}
+                      className="header-button"
                       style={{
-                        backgroundColor:
-                          color === "clicked"
-                            ? COLORS[Object.keys(COLORS)[columnId]]
-                            : "white",
-                        color:
-                          color === "clicked"
-                            ? "white"
-                            : COLORS[Object.keys(COLORS)[columnId]],
+                        backgroundColor: COLORS[column],
+                        color: "white",
+                        fontWeight: "bold",
+                        borderRadius: "5px",
+                        margin: "1px",
+                        textTransform: "capitalize",
+                        fontSize: "19px",
                       }}
                     >
-                      {Object.keys(COLORS)[columnId]}
+                      {column}
                     </Button>
                   </TableCell>
                 ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {buttonColors.map((row, rowIndex) => (
+                <TableRow key={rowIndex}>
+                  <TableCell style={{color:'white'}}>{rowIndex + 1}</TableCell>
+                  {row.map((color, columnId) => (
+                    <TableCell key={columnId}>
+                      <Button
+                        variant="contained"
+                        className={`button ${color}`}
+                        onMouseEnter={() => handleMouseEnter(rowIndex, columnId)}
+                        onMouseLeave={handleMouseLeave}
+                        onClick={() => handleButtonClick(rowIndex, columnId)}
+                        style={{
+                          backgroundColor:
+                            color === "clicked"
+                              ? COLORS[Object.keys(COLORS)[columnId]]
+                              : hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
+                              ? hoverStyle.background
+                              : "#334244",
+                          color:
+                            color === "clicked"
+                              ? "white"
+                              : hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
+                              ? hoverStyle.color
+                              : "white",
+                          border:
+                          hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
+                            ? "1px solid #CBD5E0"
+                            : "none",
+                        }}
+                      >
+                        {Object.keys(COLORS)[columnId]}
+                      </Button>
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </div>
     </>
   );
 };
+
 
 const MathsPage: React.FC = () => {
   const router = useRouter();
@@ -376,12 +402,22 @@ const MathsPage: React.FC = () => {
   return (
     <>
       <Head>
-        <style>
+      <style>
           {`
-          body {
-            background-color: ${loading ? "white" : "#154c79"};
-          }
-        `}
+            body {
+              background-color: ${loading ? "white" : "#000000"};
+              display: block;
+              background-image: url('/bg.png');
+              background-size: cover;
+              background-repeat: no-repeat;
+              background-attachment: fixed;
+              border-radius: 15px;
+              box-shadow: 0px 0px 10px 0px rgba(7, 7, 7, 0.8);
+              padding: 20px;
+              margin: 20px;
+              text-align: center;
+            }
+          `}
         </style>
       </Head>
     <div style={{ textAlign: "center" }}>
@@ -438,12 +474,16 @@ const MathsPage: React.FC = () => {
           )}
           <div
           style={{
-            backgroundColor: "#063970",
-            borderRadius: "15px",
-            boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
-            padding: "20px",
-            margin: "20px",
-            textAlign: "center",
+            display: 'block',
+            // backgroundImage: "url('/bg.png')",
+            // backgroundSize: 'cover',
+            // backgroundRepeat: 'no-repeat',
+            // backgroundAttachment: 'fixed', // Optional: Fixed background
+            borderRadius: '15px',
+            // boxShadow: '0px 0px 10px 0px rgba(7, 7, 7, 0.8)', // Add box shadow
+            // padding: '20px',
+            // margin: '20px',
+            textAlign: 'center',
           }} 
           >
           <Typography variant="h2"
