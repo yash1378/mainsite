@@ -124,9 +124,12 @@ const TestTracker: React.FC = () => {
             justifyContent: "center",
             height: "92vh", // Adjust if needed to center vertically in the viewport
             borderRadius: "15px",
+            // border:'2px solid red',
             // boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
           }}
         >
+          <div style={{display:'flex',flexDirection:'row'}}>
+          <span ><img src="/create.png" width="70px" height="70px"/></span>
           <Typography
             variant="h2"
             gutterBottom
@@ -137,6 +140,8 @@ const TestTracker: React.FC = () => {
           >
             <b>Create Your Test Tracker</b>
           </Typography>
+          </div>
+
           {/* New div element with light sky blue background */}
           <div
             style={{
@@ -145,7 +150,7 @@ const TestTracker: React.FC = () => {
               borderRadius: "10px",
               // width: "100%",
               height: "100%",
-              maxHeight: "300px",
+              maxHeight: "220px",
               maxWidth: "700px",
               boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
               display: "flex", // Use flexbox for layout

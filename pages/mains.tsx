@@ -50,11 +50,11 @@ interface Colors {
 }
 
 const COLORS: Colors = {
-  Correct: "green",
-  "Silly Error": "#Aa0000",
-  "Slight Revision": "#331577",
-  Toughness: "#1e81b0",
-  Theory: "#0c016c",
+  Correct: "#70FF00",
+  "Silly Error": "#FF3131",
+  "Slight Revision": "#FF3131",
+  Toughness: "#149AFD",
+  Theory: "#149AFD",
 };
 
 interface ConfirmationModalProps {
@@ -84,6 +84,11 @@ const generateButtonColors = (rows: number, columns: number): string[][] => {
 
 const SubjectSection: React.FC<SubjectSectionProps> = ({
   subject,
+  correct,
+  silly,
+  slight,
+  tough,
+  theory,
   setCorrect,
   setSilly,
   setSlight,
@@ -94,16 +99,20 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     generateButtonColors(30, 5)
   );
 
+
+
   const [hoveredButton, setHoveredButton] = useState<{ rowIndex: number; columnId: number } | null>(null);
 
   const router = useRouter();
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
     const newColors = [...buttonColors];
-
+    console.log(buttonColors)
+    let previous:number=-1;
     // Iterate over the whole row and adjust variables based on the previous selection
     newColors[rowIndex].forEach((value, index) => {
       if (value === "clicked") {
+        previous=index;
         switch (index) {
           case 0:
             setCorrect((prev) => prev - 4);
@@ -126,33 +135,42 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
       }
     });
 
+
     // Unselect other buttons in the same row
-    newColors[rowIndex] = newColors[rowIndex].map((_, index) =>
-      index === columnId ? "clicked" : ""
+    newColors[rowIndex] = newColors[rowIndex].map((_, index) =>{
+    if (index === columnId && previous!==columnId) {
+      return "clicked";
+    } else {
+      return "";
+    }
+  }
     );
 
-    setButtonColors(newColors);
 
-    // Update the selected button
-    switch (columnId) {
-      case 0:
-        setCorrect((prev) => prev + 4);
-        break;
-      case 1:
-        setSilly((prev) => prev + 1);
-        break;
-      case 2:
-        setSlight((prev) => prev + 1);
-        break;
-      case 3:
-        setTough((prev) => prev + 1);
-        break;
-      case 4:
-        setTheory((prev) => prev + 1);
-        break;
-      default:
-        break;
+    setButtonColors(newColors);
+    if(previous!==columnId){
+      switch (columnId) {
+        case 0:
+          setCorrect((prev) => prev + 4);
+          break;
+        case 1:
+          setSilly((prev) => prev + 1);
+          break;
+        case 2:
+          setSlight((prev) => prev + 1);
+          break;
+        case 3:
+          setTough((prev) => prev + 1);
+          break;
+        case 4:
+          setTheory((prev) => prev + 1);
+          break;
+        default:
+          break;
     }
+  }
+
+    console.log(correct, silly, slight, tough, theory);
   };
 
   const handleMouseEnter = (rowIndex: number, columnId: number) => {
@@ -215,18 +233,18 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
               }
             `}
           </style>
-          <Table className="subject-table" size="small">
+          <Table className="subject-table" size="small" style={{ borderCollapse: 'collapse' }}>
             <TableHead>
               <TableRow>
                 <TableCell style={{color:'white',fontSize:'18px'}}><b>No.</b></TableCell>
                 {Object.keys(COLORS).map((column, columnId) => (
-                  <TableCell key={columnId}>
+                  <TableCell key={columnId} style={{ border: 'none' }}>
                     <Button
                       variant="contained"
                       className="header-button"
                       style={{
                         width: "100%",
-                        backgroundColor: COLORS[column],
+                        backgroundColor: "#262626",
                         color: "white",
                         fontWeight: "bold",
                         borderRadius: "5px",
@@ -241,12 +259,14 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                 ))}
               </TableRow>
             </TableHead>
+            <br />
+            <br />
             <TableBody>
               {buttonColors.map((row, rowIndex) => (
-                <TableRow key={rowIndex}>
+                <TableRow key={rowIndex} style={{ border: 'none' }}>
                   <TableCell style={{color:'white',fontSize:'18px'}}><b>{rowIndex + 1}</b></TableCell>
                   {row.map((color, columnId) => (
-                    <TableCell key={columnId}>
+                    <TableCell key={columnId} style={{ border: 'none' }}> 
                       <Button
                         variant="contained"
                         className={`button ${color}`}

@@ -24,10 +24,6 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     // Use Google Sign-In API here
-    // Redirect to backend for authentication
-    // window.location.href = "https://jsgobackend.onrender.com/api/auth/google";
-    // window.location.href = "http://localhost:3001/api/auth/google";
-    // setLoading(true);
     // router.push("http://localhost:3001/api/auth/google");
     // router.push("https://jsgobackend.onrender.com/api/auth/google");
     router.push("https://jsmainsitebackend.onrender.com/api/auth/google");
@@ -66,7 +62,8 @@ const SignIn = () => {
 
   const buttonStyle = {
     width: "300px", 
-    padding: "1rem 2rem",
+    padding: "15px 2rem",
+    margin:"10px",
     border: "1px solid #CBD5E0",
     display: "flex",
     gap: "1rem",
@@ -149,6 +146,7 @@ const SignIn = () => {
           </div>
         ) : (
           <>
+          <div style={{height:'85vh',display:'flex',flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
             <Typography
               style={{
                 fontFamily: "'Graphik', sans-serif",
@@ -173,20 +171,6 @@ const SignIn = () => {
                     gap: "1rem",
                   }}
                 >
-                  <button
-                    onClick={handleSignOut}
-                    style={
-                      isHovered1
-                        ? { ...buttonStyle, ...hoverStyle }
-                        : buttonStyle
-                    }
-                    onMouseEnter={() => setIsHovered1(true)}
-                    onMouseLeave={() => setIsHovered1(false)}
-                  >
-                    <span style={{ fontSize: "20px", marginTop: "10px",marginLeft:"80px" }}>
-                      Sign Out
-                    </span>
-                  </button>
                   {/* <br /> */}
                   <button
                     onClick={handleGetEnrolled}
@@ -198,8 +182,8 @@ const SignIn = () => {
                     onMouseEnter={() => setIsHovered2(true)}
                     onMouseLeave={() => setIsHovered2(false)}
                   >
-                    <span style={{ fontSize: "20px", marginTop: "10px",marginLeft:"65px"}}>
-                      Get Enrolled
+                    <span style={{ fontSize: "20px", display:'flex',alignItems:'center',marginLeft:"3.8rem"}}>
+                      <b>Get Enrolled</b>
                     </span>
                   </button>
                   {/* <br /> */}
@@ -213,8 +197,8 @@ const SignIn = () => {
                     onMouseEnter={() => setIsHovered3(true)}
                     onMouseLeave={() => setIsHovered3(false)}
                   >
-                    <span style={{ fontSize: "20px", marginTop: "10px",marginLeft:"55px" }}>
-                      See your Marks
+                    <span style={{ fontSize: "20px",display:'flex',alignItems:'center',marginLeft:"3.2rem" }}>
+                      <b>See your Marks</b>
                     </span>
                   </button>
                   </div>
@@ -290,6 +274,7 @@ const SignIn = () => {
                 </Snackbar>
                 </>
               )}
+            </div>
             </div>
 
 
