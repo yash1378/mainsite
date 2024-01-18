@@ -91,7 +91,7 @@ const TestTracker: React.FC = () => {
         <style>
           {`
           body {
-            background-color: ${loading ? "white" : "#154c79"};
+            background-color: ${loading ? "white" : "white"};
             display: block;
             background-image: url('/bg.png');
             background-size: cover;
