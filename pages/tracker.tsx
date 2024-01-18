@@ -138,7 +138,7 @@ const TestTracker: React.FC = () => {
               color: "white",
             }}
           >
-            <b>Create Your Test Tracker</b>
+            Create Your <b>Test Tracker</b>
           </Typography>
           </div>
 

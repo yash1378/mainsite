@@ -83,7 +83,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
   };
 
   const hoverStyle = {
-    border: "1px solid #CBD5E0",
+    border: "2px solid #CBD5E0",
     color: "white",
     background: "transparent",
     boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
@@ -212,12 +212,32 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
             color: white !important;
             cursor: pointer;
           }
+
           .tableRow .tableCell {
             color: white;
+            border: 5px solid black;
             font-size: 16px;
           }
           .tableRow:hover .tableCell {
             color: white !important;
+          }
+          #tableHead{
+            color: white;
+            border: 5px solid black;
+          }
+          ::-webkit-scrollbar {
+            width: 10px;
+            border-radius: 10px;
+          }
+          ::-webkit-scrollbar-thumb {
+            background-color: #555 ;
+            border-radius: 10px;
+          }
+          ::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+          }
+          ::-webkit-scrollbar-track {
+            background-color: black;
           }
         `}
         </style>
@@ -249,21 +269,32 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                 color: "white",
               }}
             >
-              <b>User Data</b>
+              <b>Your Score stats</b>
             </Typography>
             <br />
             <br />
 
             {userData.testScores.length > 0 && (
               <Tabs value={selectedTab} onChange={handleChangeTab} centered>
+                <Tab
+                  label="Total"
+                  style={{
+                    fontSize: "15px",
+                    color:
+                      selectedTab === 0 ? " #444444" : "white",
+                    fontWeight:
+                      selectedTab === 0 ? "bold" : "normal",
+                    // Add any other styles as needed
+                  }}
+                />
                 {subjects.map((subject, index) => (
                   <Tab
                     key={index}
                     label={subject}
                     style={{
                       fontSize: "15px",
-                      color: selectedTab === index ? " #444444" : "white",
-                      fontWeight: selectedTab === index ? "bold" : "normal",
+                      color: selectedTab-1 === index ? " #444444" : "white",
+                      fontWeight: selectedTab-1 === index ? "bold" : "normal",
                       // Add any other styles as needed
                     }}
                   />
@@ -275,116 +306,135 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
             <br />
 
             <TabPanel value={selectedTab} index={selectedTab}>
-              <TableContainer
-                component={Paper}
-                style={{
-                  width: "90%",
-                  margin: "auto",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "black",
-                  color: "white",
+              <div style={{ overflowY: "auto", maxHeight: "65vh" }}>
+                <TableContainer
+                  component={Paper}
+                  style={{
+                    width: "90%",
+                    margin: "auto",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "black",
+                    color: "white",
 
-                  // border:'2px solid white',
-                }}
-              >
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          fontSize: "17px",
-                          textAlign: "center",
-                          borderRight: "1px solid #ffffff",
-                          borderLeft: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Date</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          textAlign: "center",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Type</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          textAlign: "center",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Total Marks</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          textAlign: "center",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Marks Scored</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Silly Error</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Revision</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          textAlign: "center",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Toughness</b>
-                      </TableCell>
-                      <TableCell
-                        className="tableCell"
-                        style={{
-                          color: "white",
-                          textAlign: "center",
-                          fontSize: "17px",
-                          borderRight: "1px solid #ffffff",
-                        }}
-                      >
-                        <b>Theory</b>
-                      </TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {userData.testScores
-                      .filter((test) => test[subjects[selectedTab]])
-                      .map((test, index) => (
+                    // border:'2px solid white',
+                  }}
+                >
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            fontSize: "17px",
+                            textAlign: "center",
+                            //borderRight: "5px solid #ffffff",
+                            //borderLeft: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Date</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: "17px",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Type</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: "17px",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Total Marks</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: "17px",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Marks Scored</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            fontSize: "17px",
+                            textAlign: "center",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Silly Error</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            fontSize: "17px",
+                            textAlign: "center",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Revision</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: "17px",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Toughness</b>
+                        </TableCell>
+                        <TableCell
+                          className="tableCell"
+                          id="tableHead"
+                          style={{
+                            backgroundColor: `#383838`,
+                            color: "white",
+                            textAlign: "center",
+                            fontSize: "17px",
+                            //borderRight: "5px solid #ffffff",
+                          }}
+                        >
+                          <b>Theory</b>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <br />
+                    {/* <br /> */}
+                    <TableBody>
+                      {userData.testScores.map((test, index) => (
                         <TableRow
                           key={index}
                           className={`tableRow ${
@@ -396,8 +446,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                           <TableCell
                             className="tableCell"
                             style={{
-                              borderRight: "1px solid #ffffff",
-                              borderLeft: "1px solid #ffffff",
+                              backgroundColor: `#383838`,
                               textAlign: "center",
                             }}
                           >
@@ -406,7 +455,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                           <TableCell
                             className="tableCell"
                             style={{
-                              borderRight: "1px solid #ffffff",
+                              backgroundColor: `#383838`,
                               textAlign: "center",
                             }}
                           >
@@ -415,7 +464,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                           <TableCell
                             className="tableCell"
                             style={{
-                              borderRight: "1px solid #ffffff",
+                              backgroundColor: `#383838`,
                               textAlign: "center",
                             }}
                           >
@@ -427,11 +476,16 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                               backgroundColor: `rgba(${hexToRgb(
                                 columnColors[0]
                               )}, 0.35)`,
-                              borderRight: "1px solid #ffffff",
                               textAlign: "center",
                             }}
                           >
-                            {test[subjects[selectedTab]].marksScored}
+                            {selectedTab === 0
+                              ? subjects.reduce(
+                                  (sum, subject) =>
+                                    sum + test[subject].marksScored,
+                                  0
+                                )
+                              : test[subjects[selectedTab-1]].marksScored}
                           </TableCell>
                           <TableCell
                             className="tableCell"
@@ -439,11 +493,16 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                               backgroundColor: `rgba(${hexToRgb(
                                 columnColors[1]
                               )}, 0.35)`,
-                              borderRight: "1px solid #ffffff",
                               textAlign: "center",
                             }}
                           >
-                            {test[subjects[selectedTab]].sillyError}
+                            {selectedTab === 0
+                              ? subjects.reduce(
+                                  (sum, subject) =>
+                                    sum + test[subject].sillyError,
+                                  0
+                                )
+                              : test[subjects[selectedTab-1]].sillyError}
                           </TableCell>
                           <TableCell
                             className="tableCell"
@@ -451,11 +510,16 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                               backgroundColor: `rgba(${hexToRgb(
                                 columnColors[2]
                               )}, 0.35)`,
-                              borderRight: "1px solid #ffffff",
                               textAlign: "center",
                             }}
                           >
-                            {test[subjects[selectedTab]].revision}
+                            {selectedTab === 0
+                              ? subjects.reduce(
+                                  (sum, subject) =>
+                                    sum + test[subject].revision,
+                                  0
+                                )
+                              : test[subjects[selectedTab-1]].revision}
                           </TableCell>
                           <TableCell
                             className="tableCell"
@@ -463,11 +527,16 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                               backgroundColor: `rgba(${hexToRgb(
                                 columnColors[3]
                               )}, 0.35)`,
-                              borderRight: "1px solid #ffffff",
                               textAlign: "center",
                             }}
                           >
-                            {test[subjects[selectedTab]].toughness}
+                            {selectedTab === 0
+                              ? subjects.reduce(
+                                  (sum, subject) =>
+                                    sum + test[subject].toughness,
+                                  0
+                                )
+                              : test[subjects[selectedTab-1]].toughness}
                           </TableCell>
                           <TableCell
                             className="tableCell"
@@ -475,17 +544,23 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                               backgroundColor: `rgba(${hexToRgb(
                                 columnColors[4]
                               )}, 0.35)`,
-                              borderRight: "1px solid #ffffff",
                               textAlign: "center",
                             }}
                           >
-                            {test[subjects[selectedTab]].theory}
+                            {selectedTab === 0
+                              ? subjects.reduce(
+                                  (sum, subject) =>
+                                    sum + test[subject].theory,
+                                  0
+                                )
+                              : test[subjects[selectedTab-1]].theory}
                           </TableCell>
                         </TableRow>
                       ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
             </TabPanel>
             <br />
 
@@ -511,7 +586,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                 <span
                   style={{
                     fontSize: "20px",
-                    marginTop: "6px",
+                    marginTop: "3px",
                     marginLeft: "80px",
                   }}
                 >

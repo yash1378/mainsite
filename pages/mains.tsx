@@ -260,7 +260,7 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
               </TableRow>
             </TableHead>
             <br />
-            <br />
+            {/* <br /> */}
             <TableBody>
               {buttonColors.map((row, rowIndex) => (
                 <TableRow key={rowIndex} style={{ border: 'none' }}>
@@ -277,22 +277,21 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                           width: "100%",
                           fontSize: "18px",
                           backgroundColor:
-                            color === "clicked"
-                              ? COLORS[Object.keys(COLORS)[columnId]]
-                              : hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
-                              ? COLORS[Object.keys(COLORS)[columnId]]
-                              : "#383838",
-                          color:
-                            color === "clicked"
-                              ? "white"
-                              : hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
-                              ? hoverStyle.color
-                              : "white",
-                          border:
-                          hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId
-                            ? "none"
-                            : "none",
-                        }}
+                          (color === "clicked" && (hoveredButton?.rowIndex !== rowIndex || hoveredButton?.columnId !== columnId))
+                            ? COLORS[Object.keys(COLORS)[columnId]]
+                            : (color === "clicked" && hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId)
+                            ? "#383838"
+                            : (hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId)
+                            ? COLORS[Object.keys(COLORS)[columnId]]
+                            : "#383838",
+                        
+                        color:
+                          (color === "clicked" || (hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId))
+                            ? "white"
+                            : "white",
+                        border: hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId ? "none" : "none",
+                        transition: "background-color 0.7s ease", // Adjust the duration and easing function here
+                      }}
                       >
                         {columnId === 0 ? "+4" : (columnId === 1 || columnId === 2) ? "-1" : "0"}
                       </Button>
@@ -498,14 +497,7 @@ const MathsPage: React.FC = () => {
           <div
           style={{
             display: 'block',
-            // backgroundImage: "url('/bg.png')",
-            // backgroundSize: 'cover',
-            // backgroundRepeat: 'no-repeat',
-            // backgroundAttachment: 'fixed', // Optional: Fixed background
             borderRadius: '15px',
-            // boxShadow: '0px 0px 10px 0px rgba(7, 7, 7, 0.8)', // Add box shadow
-            // padding: '20px',
-            // margin: '20px',
             textAlign: 'center',
           }} 
           >
