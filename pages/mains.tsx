@@ -290,7 +290,7 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
                             ? "white"
                             : "white",
                         border: hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId ? "none" : "none",
-                        transition: "background-color 0.7s ease", // Adjust the duration and easing function here
+                        transition: "background-color 0.2s ease", // Adjust the duration and easing function here
                       }}
                       >
                         {columnId === 0 ? "+4" : (columnId === 1 || columnId === 2) ? "-1" : "0"}
