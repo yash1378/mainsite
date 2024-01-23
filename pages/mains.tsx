@@ -99,20 +99,21 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     generateButtonColors(30, 5)
   );
 
-
-
-  const [hoveredButton, setHoveredButton] = useState<{ rowIndex: number; columnId: number } | null>(null);
+  const [hoveredButton, setHoveredButton] = useState<{
+    rowIndex: number;
+    columnId: number;
+  } | null>(null);
 
   const router = useRouter();
 
   const handleButtonClick = (rowIndex: number, columnId: number) => {
     const newColors = [...buttonColors];
-    console.log(buttonColors)
-    let previous:number=-1;
+    console.log(buttonColors);
+    let previous: number = -1;
     // Iterate over the whole row and adjust variables based on the previous selection
     newColors[rowIndex].forEach((value, index) => {
       if (value === "clicked") {
-        previous=index;
+        previous = index;
         switch (index) {
           case 0:
             setCorrect((prev) => prev - 4);
@@ -135,20 +136,17 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
       }
     });
 
-
     // Unselect other buttons in the same row
-    newColors[rowIndex] = newColors[rowIndex].map((_, index) =>{
-    if (index === columnId && previous!==columnId) {
-      return "clicked";
-    } else {
-      return "";
-    }
-  }
-    );
-
+    newColors[rowIndex] = newColors[rowIndex].map((_, index) => {
+      if (index === columnId && previous !== columnId) {
+        return "clicked";
+      } else {
+        return "";
+      }
+    });
 
     setButtonColors(newColors);
-    if(previous!==columnId){
+    if (previous !== columnId) {
       switch (columnId) {
         case 0:
           setCorrect((prev) => prev + 4);
@@ -167,8 +165,8 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
           break;
         default:
           break;
+      }
     }
-  }
 
     console.log(correct, silly, slight, tough, theory);
   };
@@ -187,11 +185,10 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1)",
   };
 
-
   return (
     <>
       <Typography variant="h4" color="white" style={{ margin: "30px" }}>
-        <b>        {subject}</b>
+        <b> {subject}</b>
       </Typography>
       <div
         style={{
@@ -233,12 +230,18 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
               }
             `}
           </style>
-          <Table className="subject-table" size="small" style={{ borderCollapse: 'collapse' }}>
+          <Table
+            className="subject-table"
+            size="small"
+            style={{ borderCollapse: "collapse" }}
+          >
             <TableHead>
               <TableRow>
-                <TableCell style={{color:'white',fontSize:'18px'}}><b>No.</b></TableCell>
+                <TableCell style={{ color: "white", fontSize: "18px" }}>
+                  <b>No.</b>
+                </TableCell>
                 {Object.keys(COLORS).map((column, columnId) => (
-                  <TableCell key={columnId} style={{ border: 'none' }}>
+                  <TableCell key={columnId} style={{ border: "none" }}>
                     <Button
                       variant="contained"
                       className="header-button"
@@ -263,37 +266,56 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
             {/* <br /> */}
             <TableBody>
               {buttonColors.map((row, rowIndex) => (
-                <TableRow key={rowIndex} style={{ border: 'none' }}>
-                  <TableCell style={{color:'white',fontSize:'18px'}}><b>{rowIndex + 1}</b></TableCell>
+                <TableRow key={rowIndex} style={{ border: "none" }}>
+                  <TableCell style={{ color: "white", fontSize: "18px" }}>
+                    <b>{rowIndex + 1}</b>
+                  </TableCell>
                   {row.map((color, columnId) => (
-                    <TableCell key={columnId} style={{ border: 'none' }}> 
+                    <TableCell key={columnId} style={{ border: "none" }}>
                       <Button
                         variant="contained"
                         className={`button ${color}`}
-                        onMouseEnter={() => handleMouseEnter(rowIndex, columnId)}
+                        onMouseEnter={() =>
+                          handleMouseEnter(rowIndex, columnId)
+                        }
                         onMouseLeave={handleMouseLeave}
                         onClick={() => handleButtonClick(rowIndex, columnId)}
                         style={{
                           width: "100%",
                           fontSize: "18px",
                           backgroundColor:
-                          (color === "clicked" && (hoveredButton?.rowIndex !== rowIndex || hoveredButton?.columnId !== columnId))
-                            ? COLORS[Object.keys(COLORS)[columnId]]
-                            : (color === "clicked" && hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId)
-                            ? "#383838"
-                            : (hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId)
-                            ? COLORS[Object.keys(COLORS)[columnId]]
-                            : "#383838",
-                        
-                        color:
-                          (color === "clicked" || (hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId))
-                            ? "white"
-                            : "white",
-                        border: hoveredButton?.rowIndex === rowIndex && hoveredButton?.columnId === columnId ? "none" : "none",
-                        transition: "background-color 0.2s ease", // Adjust the duration and easing function here
-                      }}
+                            color === "clicked" &&
+                            (hoveredButton?.rowIndex !== rowIndex ||
+                              hoveredButton?.columnId !== columnId)
+                              ? COLORS[Object.keys(COLORS)[columnId]]
+                              : color === "clicked" &&
+                                hoveredButton?.rowIndex === rowIndex &&
+                                hoveredButton?.columnId === columnId
+                              ? "#383838"
+                              : hoveredButton?.rowIndex === rowIndex &&
+                                hoveredButton?.columnId === columnId
+                              ? COLORS[Object.keys(COLORS)[columnId]]
+                              : "#383838",
+
+                          color:
+                            color === "clicked" ||
+                            (hoveredButton?.rowIndex === rowIndex &&
+                              hoveredButton?.columnId === columnId)
+                              ? "white"
+                              : "white",
+                          border:
+                            hoveredButton?.rowIndex === rowIndex &&
+                            hoveredButton?.columnId === columnId
+                              ? "none"
+                              : "none",
+                          transition: "background-color 0.2s ease", // Adjust the duration and easing function here
+                        }}
                       >
-                        {columnId === 0 ? "+4" : (columnId === 1 || columnId === 2) ? "-1" : "0"}
+                        {columnId === 0
+                          ? "+4"
+                          : columnId === 1 || columnId === 2
+                          ? "-1"
+                          : "0"}
                       </Button>
                     </TableCell>
                   ))}
@@ -306,7 +328,6 @@ const SubjectSection: React.FC<SubjectSectionProps> = ({
     </>
   );
 };
-
 
 const MathsPage: React.FC = () => {
   const router = useRouter();
@@ -365,32 +386,35 @@ const MathsPage: React.FC = () => {
         theoryc
       );
       // const response = await fetch("https://jsgobackend.onrender.com/mainsdata", {
-      const response = await fetch("https://jsmainsitebackend.onrender.com/mainsdata", {
-      // const response = await fetch("http://localhost:3001/mainsdata", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${data}`,
-        },
-        body: JSON.stringify({
-          date: date,
-          correctm: correctm,
-          sillym: sillym,
-          slightm: slightm,
-          toughm: toughm,
-          theorym: theorym,
-          correctp: correctp,
-          sillyp: sillyp,
-          slightp: slightp,
-          toughp: toughp,
-          theoryp: theoryp,
-          correctc: correctc,
-          sillyc: sillyc,
-          slightc: slightc,
-          toughc: toughc,
-          theoryc: theoryc,
-        }),
-      });
+      const response = await fetch(
+        "https://jsmainsitebackend.onrender.com/mainsdata",
+        {
+          // const response = await fetch("http://localhost:3001/mainsdata", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data}`,
+          },
+          body: JSON.stringify({
+            date: date,
+            correctm: correctm,
+            sillym: sillym,
+            slightm: slightm,
+            toughm: toughm,
+            theorym: theorym,
+            correctp: correctp,
+            sillyp: sillyp,
+            slightp: slightp,
+            toughp: toughp,
+            theoryp: theoryp,
+            correctc: correctc,
+            sillyc: sillyc,
+            slightc: slightc,
+            toughc: toughc,
+            theoryc: theoryc,
+          }),
+        }
+      );
 
       if (response.ok) {
         setCorrectm(0);
@@ -424,7 +448,7 @@ const MathsPage: React.FC = () => {
   return (
     <>
       <Head>
-      <style>
+        <style>
           {`
             body {
               background-color: ${loading ? "white" : "#000000"};
@@ -442,140 +466,144 @@ const MathsPage: React.FC = () => {
           `}
         </style>
       </Head>
-    <div style={{ textAlign: "center" }}>
-      {loading === true ? (
-        <>
-        <div style={{ textAlign: "center",marginTop:"40vh" }}>
-        <CircularProgress />
-        <Typography variant="h6" style={{ marginTop: 16 }}>
-          Loading...
-        </Typography>
-      </div>
-      </>
-      ) : (
-        <>
-          {modal && (
-            <Dialog
-              open={modal}
-              PaperComponent={(props) => <Paper {...props} elevation={0} />} // Set elevation to 0 for a flat paper
-              style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
-            >
-              <DialogTitle style={{ backgroundColor: "#2196F3", color: "white" }}>
-                Confirm Submission
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  Are you sure you want to submit?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleModalClose}
-                  color="primary"
-                  variant="outlined"
+      <div style={{ textAlign: "center" }}>
+        {loading === true ? (
+          <>
+            <div style={{ textAlign: "center", marginTop: "40vh" }}>
+              <CircularProgress />
+              <Typography variant="h6" style={{ marginTop: 16 }}>
+                Loading...
+              </Typography>
+            </div>
+          </>
+        ) : (
+          <>
+            {modal && (
+              <Dialog
+                open={modal}
+                PaperComponent={(props) => <Paper {...props} elevation={0} />} // Set elevation to 0 for a flat paper
+                style={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }}
+              >
+                <DialogTitle
+                  style={{ backgroundColor: "#2196F3", color: "white" }}
                 >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  color="primary"
-                  variant="contained"
-                  autoFocus
-                  sx={{
-                    backgroundColor: "#1565C0",
-                    color: "white",
-                    "&:hover": {
-                      backgroundColor: "#0D47A1",
-                    },
-                  }}
-                >
-                  Confirm
-                </Button>
-              </DialogActions>
-            </Dialog>
-          )}
-          <div
-          style={{
-            display: 'block',
-            borderRadius: '15px',
-            textAlign: 'center',
-          }} 
-          >
-          <Typography variant="h2"
+                  Confirm Submission
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Are you sure you want to submit?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleModalClose}
+                    color="primary"
+                    variant="outlined"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    color="primary"
+                    variant="contained"
+                    autoFocus
+                    sx={{
+                      backgroundColor: "#1565C0",
+                      color: "white",
+                      "&:hover": {
+                        backgroundColor: "#0D47A1",
+                      },
+                    }}
+                  >
+                    Confirm
+                  </Button>
+                </DialogActions>
+              </Dialog>
+            )}
+            <div
               style={{
-                fontFamily: "'Graphik', sans-serif",
-                color: "white",
-              }} 
-           ><b>Track Test</b></Typography>
-          {/* <Typography variant="h4" style={{ margin: "30px" }} color='white'>
+                display: "block",
+                borderRadius: "15px",
+                textAlign: "center",
+              }}
+            >
+              <Typography
+                variant="h2"
+                style={{
+                  fontFamily: "'Graphik', sans-serif",
+                  color: "white",
+                }}
+              >
+                <b>Track Test</b>
+              </Typography>
+              {/* <Typography variant="h4" style={{ margin: "30px" }} color='white'>
             <b>Single Correct</b>
           </Typography> */}
 
-          <SubjectSection
-            subject="Maths"
-            correct={correctm}
-            silly={sillym}
-            slight={slightm}
-            tough={toughm}
-            theory={theorym}
-            setCorrect={setCorrectm}
-            setSilly={setSillym}
-            setSlight={setSlightm}
-            setTough={setToughm}
-            setTheory={setTheorym}
-          />
+              <SubjectSection
+                subject="Maths"
+                correct={correctm}
+                silly={sillym}
+                slight={slightm}
+                tough={toughm}
+                theory={theorym}
+                setCorrect={setCorrectm}
+                setSilly={setSillym}
+                setSlight={setSlightm}
+                setTough={setToughm}
+                setTheory={setTheorym}
+              />
 
-          <SubjectSection
-            subject="Chemistry"
-            correct={correctc}
-            silly={sillyc}
-            slight={slightc}
-            tough={toughc}
-            theory={theoryc}
-            setCorrect={setCorrectc}
-            setSilly={setSillyc}
-            setSlight={setSlightc}
-            setTough={setToughc}
-            setTheory={setTheoryc}
-          />
+              <SubjectSection
+                subject="Chemistry"
+                correct={correctc}
+                silly={sillyc}
+                slight={slightc}
+                tough={toughc}
+                theory={theoryc}
+                setCorrect={setCorrectc}
+                setSilly={setSillyc}
+                setSlight={setSlightc}
+                setTough={setToughc}
+                setTheory={setTheoryc}
+              />
 
-          <SubjectSection
-            subject="Physics"
-            correct={correctp}
-            silly={sillyp}
-            slight={slightp}
-            tough={toughp}
-            theory={theoryp}
-            setCorrect={setCorrectp}
-            setSilly={setSillyp}
-            setSlight={setSlightp}
-            setTough={setToughp}
-            setTheory={setTheoryp}
-          />
+              <SubjectSection
+                subject="Physics"
+                correct={correctp}
+                silly={sillyp}
+                slight={slightp}
+                tough={toughp}
+                theory={theoryp}
+                setCorrect={setCorrectp}
+                setSilly={setSillyp}
+                setSlight={setSlightp}
+                setTough={setToughp}
+                setTheory={setTheoryp}
+              />
 
-          <StyledButton
-            variant="contained"
-            color="primary"
-            onClick={handleModalOpen}
-          >
-            Submit
-          </StyledButton>
-          <StyledButton
-            variant="contained"
-            color="primary"
-            onClick={()=>{
-              router.push({
-                pathname: "/tracker",
-              });
-            }}
-          >
-            Go Back
-          </StyledButton>
-
-          </div>
-        </>
-      )}
-    </div>
+              <StyledButton
+                variant="contained"
+                color="primary"
+                onClick={handleModalOpen}
+              >
+                Submit
+              </StyledButton>
+              <StyledButton
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  router.push({
+                    pathname: "/tracker",
+                  });
+                }}
+              >
+                Go Back
+              </StyledButton>
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 };

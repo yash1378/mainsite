@@ -128,18 +128,20 @@ const TestTracker: React.FC = () => {
             // boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
           }}
         >
-          <div style={{display:'flex',flexDirection:'row'}}>
-          <span ><img src="/create.png" width="70px" height="70px"/></span>
-          <Typography
-            variant="h2"
-            gutterBottom
-            style={{
-              fontFamily: "'Graphik', sans-serif",
-              color: "white",
-            }}
-          >
-            Create Your <b>Test Tracker</b>
-          </Typography>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <span>
+              <img src="/create.png" width="70px" height="70px" />
+            </span>
+            <Typography
+              variant="h2"
+              gutterBottom
+              style={{
+                fontFamily: "'Graphik', sans-serif",
+                color: "white",
+              }}
+            >
+              Create Your <b>Test Tracker</b>
+            </Typography>
           </div>
 
           {/* New div element with light sky blue background */}
@@ -150,7 +152,7 @@ const TestTracker: React.FC = () => {
               borderRadius: "10px",
               // width: "100%",
               height: "100%",
-              maxHeight: "220px",
+              maxHeight: "27vh",
               maxWidth: "700px",
               boxShadow: "0px 0px 10px 0px rgba(7,7,7,0.8)", // Add box shadow
               display: "flex", // Use flexbox for layout
@@ -195,6 +197,14 @@ const TestTracker: React.FC = () => {
                 style={{ marginTop: "16px" }} // Add some margin at the top
               >
                 Submit
+              </StyledButton>
+              <StyledButton
+                variant="contained"
+                color="primary"
+                onClick={() => Router.push("/")}
+                style={{ marginTop: "16px" }} // Add some margin at the top
+              >
+                Go Back
               </StyledButton>
             </form>
           </div>

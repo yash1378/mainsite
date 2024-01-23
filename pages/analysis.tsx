@@ -375,7 +375,7 @@ const UserDataPage: React.FC<UserDataPageProps> = (props) => {
                             //borderRight: "5px solid #ffffff",
                           }}
                         >
-                          <b>Marks Scored</b>
+                          {selectedTab === 0 ? <b>TotalScore</b> :(selectedTab === 1 ? <b>MathScore</b> :(selectedTab === 2 ? <b>PhyScore</b> : <b>ChemScore</b>))}
                         </TableCell>
                         <TableCell
                           className="tableCell"
