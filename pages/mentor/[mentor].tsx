@@ -22,6 +22,124 @@ interface MentorCard {
   buttonLabel: string;
 }
 
+
+
+const mentors: MentorCard[] = [
+  {
+    photo: "/1.jpg",
+    name: "Mr X",
+    college: "Example University",
+    experience: "5 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/2.jpg",
+    name: "Mr Y",
+    college: "Another University",
+    experience: "3 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/3.jpg",
+    name: "Mr A",
+    college: "Another University",
+    experience: "1 year",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/4.jpg",
+    name: "Mr B",
+    college: "Another University",
+    experience: "6 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/1.jpg",
+    name: "Mr X",
+    college: "Example University",
+    experience: "5 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/2.jpg",
+    name: "Mr Y",
+    college: "Another University",
+    experience: "3 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/3.jpg",
+    name: "Mr A",
+    college: "Another University",
+    experience: "1 year",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/4.jpg",
+    name: "Mr B",
+    college: "Another University",
+    experience: "6 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/1.jpg",
+    name: "Mr X",
+    college: "Example University",
+    experience: "5 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/2.jpg",
+    name: "Mr Y",
+    college: "Another University",
+    experience: "3 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/3.jpg",
+    name: "Mr A",
+    college: "Another University",
+    experience: "1 year",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/4.jpg",
+    name: "Mr B",
+    college: "Another University",
+    experience: "6 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/1.jpg",
+    name: "Mr X",
+    college: "Example University",
+    experience: "5 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/2.jpg",
+    name: "Mr Y",
+    college: "Another University",
+    experience: "3 years",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/3.jpg",
+    name: "Mr A",
+    college: "Another University",
+    experience: "1 year",
+    buttonLabel: "Give Review",
+  },
+  {
+    photo: "/4.jpg",
+    name: "Mr B",
+    college: "Another University",
+    experience: "6 years",
+    buttonLabel: "Give Review",
+  },
+  // Add more mentors as needed
+];
+
 // Define your component
 const MentorPage: React.FC = () => {
   // Use the useRouter hook
@@ -29,121 +147,6 @@ const MentorPage: React.FC = () => {
   // Extract the mentor parameter from the query object
   const { mentor: mentorIndex } = router.query;
 
-  const mentors: MentorCard[] = [
-    {
-      photo: "/1.jpg",
-      name: "Mr X",
-      college: "Example University",
-      experience: "5 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/2.jpg",
-      name: "Mr Y",
-      college: "Another University",
-      experience: "3 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/3.jpg",
-      name: "Mr A",
-      college: "Another University",
-      experience: "1 year",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/4.jpg",
-      name: "Mr B",
-      college: "Another University",
-      experience: "6 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/1.jpg",
-      name: "Mr X",
-      college: "Example University",
-      experience: "5 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/2.jpg",
-      name: "Mr Y",
-      college: "Another University",
-      experience: "3 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/3.jpg",
-      name: "Mr A",
-      college: "Another University",
-      experience: "1 year",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/4.jpg",
-      name: "Mr B",
-      college: "Another University",
-      experience: "6 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/1.jpg",
-      name: "Mr X",
-      college: "Example University",
-      experience: "5 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/2.jpg",
-      name: "Mr Y",
-      college: "Another University",
-      experience: "3 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/3.jpg",
-      name: "Mr A",
-      college: "Another University",
-      experience: "1 year",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/4.jpg",
-      name: "Mr B",
-      college: "Another University",
-      experience: "6 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/1.jpg",
-      name: "Mr X",
-      college: "Example University",
-      experience: "5 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/2.jpg",
-      name: "Mr Y",
-      college: "Another University",
-      experience: "3 years",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/3.jpg",
-      name: "Mr A",
-      college: "Another University",
-      experience: "1 year",
-      buttonLabel: "Give Review",
-    },
-    {
-      photo: "/4.jpg",
-      name: "Mr B",
-      college: "Another University",
-      experience: "6 years",
-      buttonLabel: "Give Review",
-    },
-    // Add more mentors as needed
-  ];
 
   const [averageTime, setAverageTime] = useState("");
   const [experience, setExperience] = useState("");
