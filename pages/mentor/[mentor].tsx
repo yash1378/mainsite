@@ -144,8 +144,13 @@ const mentors: MentorCard[] = [
 const MentorPage: React.FC = () => {
   // Use the useRouter hook
   const router = useRouter();
-  // Extract the mentor parameter from the query object
   const { mentor: mentorIndex } = router.query;
+
+  if (!mentorIndex) {
+    // Handle the case where mentorIndex is undefined
+    return <div>Mentor not found</div>;
+  }
+  
 
 
   const [averageTime, setAverageTime] = useState("");
